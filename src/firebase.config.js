@@ -1,47 +1,28 @@
-// src/firebase.config.js
-
-// Import Firebase core modules
-import { getApps, getApp, initializeApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
-// List of required environment variables
-const requiredKeys = [
-  "VITE_apiKey",
-  "VITE_authDomain",
-  "VITE_projectId",
-  "VITE_storageBucket",
-  "VITE_messagingSenderId",
-  "VITE_appId",
-];
-
-// Warn in console if any are missing (useful for debugging)
-const missing = requiredKeys.filter((key) => !import.meta.env[key]);
-if (missing.length) {
-  console.warn(
-    `⚠️ Missing Firebase config values for: ${missing.join(
-      ", "
-    )}. Check your .env file.`
-  );
-}
-
-// Firebase configuration using environment variables
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_apiKey,
-  authDomain: import.meta.env.VITE_authDomain,
-  projectId: import.meta.env.VITE_projectId,
-  storageBucket: import.meta.env.VITE_storageBucket,
-  messagingSenderId: import.meta.env.VITE_messagingSenderId,
-  appId: import.meta.env.VITE_appId,
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Initialize Firebase (avoid re-initialization during hot-reload)
-const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+const missingEnvKey = Object.entries(firebaseConfig).find(
+  ([, value]) => !value
+);
 
-// Initialize Firebase Authentication
+if (missingEnvKey) {
+  const [key] = missingEnvKey;
+  throw new Error(`Missing Firebase environment variable: ${key}`);
+}
+
+const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-// Enable Google Auth Provider
 const provider = new GoogleAuthProvider();
+provider.setCustomParameters({ prompt: "select_account" });
 
-// ✅ Export everything correctly as named exports
 export { app, auth, provider };

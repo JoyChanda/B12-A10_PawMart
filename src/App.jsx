@@ -13,6 +13,7 @@ import useAuth from "./hooks/useAuth";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase.config";
 import toast from "react-hot-toast";
+import NotFound404 from "./pages/NotFound404";
 
 export default function App() {
   const { user, loading } = useAuth();
@@ -63,6 +64,8 @@ export default function App() {
               </PrivateRoute>
             }
           />
+          {/* 404 Page */}
+          <Route path="*" element={<NotFound404 />} />
         </Routes>
       </main>
 

@@ -4,13 +4,15 @@ import { AnimatePresence, motion as Motion } from "framer-motion";
 import API from "../services/api";
 import ListingCard from "../components/ListingCard";
 
-const categoryFilters = [
+const defaultCategoryFilters = [
   "All",
   "Pets",
   "Pet Food",
   "Accessories",
   "Care Products",
 ];
+
+const normalize = (value) => (value ?? "").toString().trim().toLowerCase();
 
 export default function PetsSupplies() {
   const { categoryName } = useParams();
@@ -19,6 +21,10 @@ export default function PetsSupplies() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [isLoading, setIsLoading] = useState(false);
+  const [categoryFilters, setCategoryFilters] = useState(
+    defaultCategoryFilters
+  );
+  const [errorMessage, setErrorMessage] = useState("");
 
   const pageTitle = useMemo(
     () =>
@@ -36,26 +42,62 @@ export default function PetsSupplies() {
     const controller = new AbortController();
     async function fetchListings() {
       setIsLoading(true);
+      setErrorMessage("");
       try {
         const params = {};
         if (categoryName) {
           const decoded = decodeURIComponent(categoryName);
           params.category = decoded;
-          setSelectedCategory(decoded);
         }
         const res = await API.get("/listings", {
           params,
           signal: controller.signal,
         });
-        setListings(res.data);
-        setFilteredListings(res.data);
+        const rawData = Array.isArray(res.data?.data)
+          ? res.data.data
+          : Array.isArray(res.data)
+          ? res.data
+          : [];
+
+        if (!Array.isArray(rawData)) {
+          throw new Error("Invalid listings data format");
+        }
+
+        setListings(rawData);
+        setFilteredListings(rawData);
+
+        const uniqueCategories = Array.from(
+          new Set(
+            rawData
+              .map((item) => item.category)
+              .filter((cat) => normalize(cat).length > 0)
+          )
+        );
+
+        setCategoryFilters(["All", ...uniqueCategories]);
+
+        if (categoryName) {
+          const decoded = decodeURIComponent(categoryName);
+          const matchedCategory =
+            uniqueCategories.find(
+              (cat) => normalize(cat) === normalize(decoded)
+            ) || decoded;
+          setSelectedCategory(matchedCategory);
+        } else {
+          setSelectedCategory("All");
+        }
       } catch (err) {
         if (err.name !== "CanceledError" && err.code !== "ERR_CANCELED") {
           if (err.code !== "ERR_NETWORK" && err.code !== "ECONNREFUSED") {
             console.error("Error fetching listings:", err);
           }
+          setErrorMessage(
+            err?.message ||
+              "We couldn't load the listings right now. Please try again shortly."
+          );
           setListings([]);
           setFilteredListings([]);
+          setSelectedCategory("All");
         }
       } finally {
         setIsLoading(false);
@@ -69,7 +111,8 @@ export default function PetsSupplies() {
     const term = searchTerm.trim().toLowerCase();
     const filtered = listings.filter((item) => {
       const matchesCategory =
-        selectedCategory === "All" || item.category === selectedCategory;
+        normalize(selectedCategory) === "all" ||
+        normalize(item.category) === normalize(selectedCategory);
       const matchesSearch =
         !term ||
         item.name.toLowerCase().includes(term) ||
@@ -121,6 +164,10 @@ export default function PetsSupplies() {
       {isLoading ? (
         <div className="py-12 text-center text-gray-500 dark:text-gray-400">
           Loading listings...
+        </div>
+      ) : errorMessage ? (
+        <div className="py-12 text-center text-red-500 dark:text-red-400">
+          {errorMessage}
         </div>
       ) : filteredListings.length === 0 ? (
         <div className="py-12 text-center text-gray-500 dark:text-gray-400">

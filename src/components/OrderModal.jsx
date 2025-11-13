@@ -7,6 +7,8 @@ import toast from "react-hot-toast";
 export default function OrderModal({ item, isOpen, onClose, onSuccess }) {
   const { user } = useAuth();
   const [order, setOrder] = useState({
+    buyerName: "",
+    email: "",
     address: "",
     phone: "",
     date: "",
@@ -16,7 +18,15 @@ export default function OrderModal({ item, isOpen, onClose, onSuccess }) {
 
   useEffect(() => {
     if (!isOpen) {
-      setOrder({ address: "", phone: "", date: "", notes: "", quantity: 1 });
+      setOrder({
+        buyerName: user?.displayName || "",
+        email: user?.email || "",
+        address: "",
+        phone: "",
+        date: "",
+        notes: "",
+        quantity: 1,
+      });
       return;
     }
 
@@ -24,9 +34,11 @@ export default function OrderModal({ item, isOpen, onClose, onSuccess }) {
 
     setOrder((prev) => ({
       ...prev,
+      buyerName: user?.displayName || prev.buyerName || "",
+      email: user?.email || prev.email || "",
       quantity: item.category === "Pets" ? 1 : prev.quantity || 1,
     }));
-  }, [isOpen, item?.category]);
+  }, [isOpen, item?.category, user?.displayName, user?.email]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,11 +59,28 @@ export default function OrderModal({ item, isOpen, onClose, onSuccess }) {
       return;
     }
 
+    if (!order.buyerName || !order.buyerName.trim()) {
+      toast.error("Please enter your name.");
+      return;
+    }
+
+    if (!order.email || !order.email.trim()) {
+      toast.error("Please enter your email.");
+      return;
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(order.email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
     const payload = {
       productId: item._id,
       productName: item.name,
-      buyerName: user?.displayName || "Guest",
-      email: user?.email,
+      buyerName: order.buyerName.trim(),
+      email: order.email.trim(),
       quantity: item.category === "Pets" ? 1 : Number(order.quantity),
       price: item.price,
       address: order.address,
@@ -65,7 +94,15 @@ export default function OrderModal({ item, isOpen, onClose, onSuccess }) {
       toast.success("Order placed successfully! 🎉");
       onSuccess();
       onClose();
-      setOrder({ address: "", phone: "", date: "", notes: "", quantity: 1 });
+      setOrder({
+        buyerName: user?.displayName || "",
+        email: user?.email || "",
+        address: "",
+        phone: "",
+        date: "",
+        notes: "",
+        quantity: 1,
+      });
     } catch (err) {
       toast.error(err?.response?.data?.error || "Failed to place order.");
     }
@@ -100,16 +137,23 @@ export default function OrderModal({ item, isOpen, onClose, onSuccess }) {
             <form onSubmit={handleSubmit} className="space-y-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <input
-                  defaultValue={user?.displayName || ""}
-                  readOnly
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                  placeholder="Name"
+                  value={order.buyerName}
+                  onChange={(e) =>
+                    setOrder({ ...order, buyerName: e.target.value })
+                  }
+                  required
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400"
+                  placeholder="Your Name *"
                 />
                 <input
-                  defaultValue={user?.email || ""}
-                  readOnly
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                  placeholder="Email"
+                  type="email"
+                  value={order.email}
+                  onChange={(e) =>
+                    setOrder({ ...order, email: e.target.value })
+                  }
+                  required
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400"
+                  placeholder="Your Email *"
                 />
                 <input
                   value={item.category === "Pets" ? 1 : order.quantity}

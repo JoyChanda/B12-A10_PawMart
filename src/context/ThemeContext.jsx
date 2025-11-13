@@ -23,6 +23,7 @@ export const ThemeProvider = ({ children }) => {
   );
   const [isManual, setIsManual] = useState(() => readStoredTheme() !== null);
 
+  // 🧩 Sync <html> attributes and localStorage when theme changes
   useEffect(() => {
     if (!isBrowser) return;
 
@@ -37,6 +38,7 @@ export const ThemeProvider = ({ children }) => {
     }
   }, [theme, isManual]);
 
+  // 🖥️ Follow system theme if user hasn’t manually changed it
   useEffect(() => {
     if (!isBrowser) return;
 
@@ -49,6 +51,7 @@ export const ThemeProvider = ({ children }) => {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, [isManual]);
 
+  // 🌗 Toggle between light and dark manually
   const toggleTheme = () => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
     setIsManual(true);

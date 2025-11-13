@@ -10,6 +10,7 @@ export default function MyOrders() {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [deletingOrderId, setDeletingOrderId] = useState(null);
 
   const extractOrders = (payload) => {
     if (!payload) return [];
@@ -46,6 +47,33 @@ export default function MyOrders() {
       }
     })();
   }, [user?.email]);
+
+  const handleDeleteOrder = async (orderId) => {
+    if (!orderId) return;
+
+    if (
+      !window.confirm(
+        "Are you sure you want to delete this order? This action cannot be undone."
+      )
+    ) {
+      return;
+    }
+
+    setDeletingOrderId(orderId);
+    try {
+      await API.delete(`/orders/${orderId}`);
+      setOrders((prev) => prev.filter((order) => order._id !== orderId));
+      toast.success("Order deleted successfully!");
+    } catch (err) {
+      console.error("Error deleting order:", err);
+      toast.error(
+        err?.response?.data?.error ||
+          "Failed to delete order. Please try again."
+      );
+    } finally {
+      setDeletingOrderId(null);
+    }
+  };
 
   const downloadPDF = () => {
     try {
@@ -140,7 +168,7 @@ export default function MyOrders() {
       </div>
 
       <div className="mt-4 overflow-x-auto -mx-3 sm:mx-0">
-        <table className="w-full table-auto min-w-[720px]">
+        <table className="w-full table-auto min-w-[800px]">
           <thead className="text-left bg-gray-50/60 dark:bg-gray-800/70">
             <tr className="border-b border-gray-300 dark:border-gray-700">
               <th className="text-gray-800 dark:text-gray-200 py-3 px-4 font-semibold">
@@ -164,13 +192,16 @@ export default function MyOrders() {
               <th className="text-gray-800 dark:text-gray-200 py-3 px-4 font-semibold">
                 Date
               </th>
+              <th className="text-gray-800 dark:text-gray-200 py-3 px-4 font-semibold text-right">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
               <tr>
                 <td
-                  colSpan="7"
+                  colSpan="8"
                   className="py-6 text-center text-gray-500 dark:text-gray-400"
                 >
                   Loading orders...
@@ -179,7 +210,7 @@ export default function MyOrders() {
             ) : orders.length === 0 ? (
               <tr>
                 <td
-                  colSpan="7"
+                  colSpan="8"
                   className="py-4 text-center text-gray-500 dark:text-gray-400"
                 >
                   {errorMessage || "No orders yet."}
@@ -215,6 +246,15 @@ export default function MyOrders() {
                   </td>
                   <td className="py-3 px-4 text-gray-600 dark:text-gray-400 text-sm">
                     {o?.date ? new Date(o.date).toLocaleDateString() : "—"}
+                  </td>
+                  <td className="py-3 px-4 text-right">
+                    <button
+                      onClick={() => handleDeleteOrder(o?._id)}
+                      disabled={deletingOrderId === o?._id}
+                      className="text-sm font-semibold text-red-500 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:underline transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {deletingOrderId === o?._id ? "Deleting..." : "Delete"}
+                    </button>
                   </td>
                 </tr>
               ))

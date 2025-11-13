@@ -216,9 +216,12 @@ export default function MyListings() {
       </div>
 
       <div className="mt-4 overflow-x-auto -mx-3 sm:mx-0">
-        <table className="w-full table-auto min-w-[720px]">
+        <table className="w-full table-auto min-w-[800px]">
           <thead className="text-left bg-gray-50/60 dark:bg-gray-800/70">
             <tr className="border-b border-gray-300 dark:border-gray-700">
+              <th className="text-gray-800 dark:text-gray-200 py-3 px-4 font-semibold">
+                Image
+              </th>
               <th className="text-gray-800 dark:text-gray-200 py-3 px-4 font-semibold">
                 Name
               </th>
@@ -243,7 +246,7 @@ export default function MyListings() {
             {isLoading ? (
               <tr>
                 <td
-                  colSpan="6"
+                  colSpan="7"
                   className="py-6 text-center text-gray-500 dark:text-gray-400"
                 >
                   Loading your listings...
@@ -252,10 +255,10 @@ export default function MyListings() {
             ) : listings.length === 0 ? (
               <tr>
                 <td
-                  colSpan="6"
+                  colSpan="7"
                   className="py-6 text-center text-gray-500 dark:text-gray-400"
                 >
-                  You haven’t added any listings yet.
+                  You haven't added any listings yet.
                 </td>
               </tr>
             ) : (
@@ -264,6 +267,20 @@ export default function MyListings() {
                   key={listing._id}
                   className="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50/80 dark:hover:bg-gray-800/60 transition"
                 >
+                  <td className="py-3 px-4">
+                    <img
+                      src={
+                        listing.image ||
+                        "https://via.placeholder.com/100x100?text=No+Image"
+                      }
+                      alt={listing.name}
+                      className="w-20 h-20 object-cover rounded-lg"
+                      onError={(e) => {
+                        e.target.src =
+                          "https://via.placeholder.com/100x100?text=No+Image";
+                      }}
+                    />
+                  </td>
                   <td className="py-3 px-4 text-gray-800 dark:text-gray-100 font-medium">
                     {listing.name}
                   </td>

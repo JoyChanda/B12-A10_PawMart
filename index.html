@@ -1,10 +1,35 @@
 <!DOCTYPE html>
-<html lang="en" dark-theme="dark">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>b12-a10-pawmart</title>
+    <script>
+      // Prevent flash of unstyled content by applying theme before React loads
+      (function () {
+        try {
+          const stored = localStorage.getItem("theme");
+          const prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)"
+          ).matches;
+          const theme =
+            stored === "light" || stored === "dark"
+              ? stored
+              : prefersDark
+              ? "dark"
+              : "light";
+          document.documentElement.classList.toggle("dark", theme === "dark");
+        } catch (error) {
+          console.warn("Unable to determine theme preference:", error);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

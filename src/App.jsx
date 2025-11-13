@@ -1,7 +1,15 @@
 import React from "react";
+import Navbar from "./components/Navbar";
 
-const App = () => {
-  return <div>App</div>;
-};
+import { Outlet } from "react-router-dom";
 
-export default App;
+export default function App() {
+  return (
+    <div className="min-h-screen flex flex-col bg-white">
+      <Navbar />
+      <main className="flex-grow">
+        <Outlet />
+      </main>
+    </div>
+  );
+}

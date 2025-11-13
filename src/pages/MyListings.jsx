@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../services/api";
 import useAuth from "../hooks/useAuth";
@@ -17,58 +17,6 @@ export default function MyListings() {
   const [selectedListing, setSelectedListing] = useState(null);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    category: "Pets",
-    price: 0,
-    location: "",
-    description: "",
-    image: "",
-    date: "",
-  });
-
-  useEffect(() => {
-    document.title = "PawMart - My Listings";
-  }, []);
-
-  const fetchListings = async () => {
-    if (!user?.email) return;
-    setIsLoading(true);
-    try {
-      const res = await API.get("/listings", {
-        params: { email: user.email },
-      });
-      setListings(res.data);
-    } catch (err) {
-      if (err.code !== "ERR_NETWORK" && err.code !== "ECONNREFUSED") {
-        console.error("Error fetching listings:", err);
-      }
-      toast.error("Unable to load listings right now.");
-      setListings([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchListings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.email]);
-
-  const openEditModal = (listing) => {
-    setSelectedListing(listing);
-    setForm({
-      name: listing.name,
-      category: listing.category,
-      price: listing.price,
-      location: listing.location,
-      description: listing.description,
-      image: listing.image,
-      date: listing.date || "",
-    });
-    setIsEditOpen(true);
-  };
-
   const resetForm = useMemo(
     () => ({
       name: "",
@@ -81,6 +29,72 @@ export default function MyListings() {
     }),
     []
   );
+  const [form, setForm] = useState(resetForm);
+
+  useEffect(() => {
+    document.title = "PawMart - My Listings";
+  }, []);
+
+  const extractListings = (payload) => {
+    if (!payload) return [];
+    if (Array.isArray(payload?.data)) return payload.data;
+    if (Array.isArray(payload)) return payload;
+    if (Array.isArray(payload?.items)) return payload.items;
+    return [];
+  };
+
+  const toListing = (payload) => {
+    if (!payload) return null;
+    if (payload.data && !Array.isArray(payload.data)) return payload.data;
+    if (payload.item) return payload.item;
+    return payload;
+  };
+
+  const fetchListings = async () => {
+    if (!user?.email) return;
+    setIsLoading(true);
+    setSelectedListing(null);
+    try {
+      const res = await API.get("/listings", {
+        params: { email: user.email },
+      });
+      setListings(extractListings(res.data));
+    } catch (err) {
+      if (err.code !== "ERR_NETWORK" && err.code !== "ECONNREFUSED") {
+        console.error("Error fetching listings:", err);
+      }
+      toast.error(
+        err?.response?.data?.error ||
+          "Unable to load your listings right now. Please try again shortly."
+      );
+      setListings([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchListings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.email]);
+
+  const openEditModal = (listing) => {
+    const normalizedListing = toListing(listing);
+    setSelectedListing(normalizedListing);
+    setForm({
+      name: normalizedListing?.name || "",
+      category: normalizedListing?.category || "Pets",
+      price:
+        normalizedListing?.category === "Pets"
+          ? 0
+          : normalizedListing?.price ?? 0,
+      location: normalizedListing?.location || "",
+      description: normalizedListing?.description || "",
+      image: normalizedListing?.image || "",
+      date: normalizedListing?.date || "",
+    });
+    setIsEditOpen(true);
+  };
 
   const handleEditField = (field, value) => {
     setForm((prev) => {
@@ -131,21 +145,27 @@ export default function MyListings() {
     try {
       const payload = {
         ...form,
-        price: form.category === "Pets" ? 0 : Number(form.price),
+        price: form.category === "Pets" ? 0 : Number(form.price || 0),
       };
       const updated = await API.patch(
         `/listings/${selectedListing._id}`,
         payload
       );
+      const updatedListing = toListing(updated?.data ?? updated);
+      if (!updatedListing?._id) {
+        throw new Error("Invalid response while updating listing.");
+      }
       setListings((prev) =>
         prev.map((item) =>
-          item._id === selectedListing._id ? updated.data : item
+          item._id === selectedListing._id
+            ? { ...item, ...updatedListing }
+            : item
         )
       );
       toast.success("Listing updated successfully!");
       setIsEditOpen(false);
       setSelectedListing(null);
-      setForm(resetForm);
+      setForm({ ...resetForm });
     } catch (err) {
       toast.error(err?.response?.data?.error || "Failed to update listing.");
     } finally {
@@ -308,7 +328,7 @@ export default function MyListings() {
                   onClick={() => {
                     setIsEditOpen(false);
                     setSelectedListing(null);
-                    setForm(resetForm);
+                    setForm({ ...resetForm });
                   }}
                   className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 text-2xl leading-none"
                   aria-label="Close edit modal"
@@ -391,7 +411,7 @@ export default function MyListings() {
                   onClick={() => {
                     setIsEditOpen(false);
                     setSelectedListing(null);
-                    setForm(resetForm);
+                    setForm({ ...resetForm });
                   }}
                   className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                 >

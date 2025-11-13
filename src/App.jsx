@@ -10,6 +10,7 @@ import Register from "./pages/Register";
 import AddListing from "./pages/AddListing";
 import ListingDetails from "./pages/ListingDetails";
 import MyListings from "./pages/MyListings";
+import MyOrders from "./pages/MyOrders";
 import NotFound404 from "./pages/NotFound404";
 import PrivateRoute from "./components/PrivateRoute";
 import useAuth from "./hooks/useAuth";
@@ -73,9 +74,18 @@ function AppContent() {
               </PrivateRoute>
             }
           />
+          <Route
+            path="/my-orders"
+            element={
+              <PrivateRoute>
+                <MyOrders />
+              </PrivateRoute>
+            }
+          />
           <Route path="*" element={<NotFound404 />} />
         </Routes>
       </Suspense>
+      {/* Footer should NOT show on 404 — we'll hide inside NotFound page */}
       <Footer />
     </div>
   );

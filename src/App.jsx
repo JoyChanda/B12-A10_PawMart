@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AddListing from "./pages/AddListing";
 import ListingDetails from "./pages/ListingDetails";
+import MyListings from "./pages/MyListings";
 import NotFound404 from "./pages/NotFound404";
 import PrivateRoute from "./components/PrivateRoute";
 import useAuth from "./hooks/useAuth";
@@ -61,6 +62,14 @@ function AppContent() {
             element={
               <PrivateRoute>
                 <AddListing />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/my-listings"
+            element={
+              <PrivateRoute>
+                <MyListings />
               </PrivateRoute>
             }
           />

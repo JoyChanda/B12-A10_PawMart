@@ -29,7 +29,7 @@ module.exports = {
   plugins: [require("daisyui")],
 
   daisyui: {
-    themes: ["light", "dark"],
-    darkTheme: "dark",
+    themes: ["light", "dark"], // use only the basic DaisyUI light/dark pair
+    darkTheme: "dark", // ensures class="dark" syncs with DaisyUI dark theme
   },
 };

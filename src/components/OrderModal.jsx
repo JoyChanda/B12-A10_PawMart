@@ -17,16 +17,23 @@ export default function OrderModal({ item, isOpen, onClose, onSuccess }) {
   useEffect(() => {
     if (!isOpen) {
       setOrder({ address: "", phone: "", date: "", notes: "", quantity: 1 });
-    } else {
-      setOrder((prev) => ({
-        ...prev,
-        quantity: item.category === "Pets" ? 1 : prev.quantity || 1,
-      }));
+      return;
     }
-  }, [isOpen, item.category]);
+
+    if (!item) return;
+
+    setOrder((prev) => ({
+      ...prev,
+      quantity: item.category === "Pets" ? 1 : prev.quantity || 1,
+    }));
+  }, [isOpen, item?.category]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!item?._id) {
+      toast.error("Listing information is unavailable. Please try again.");
+      return;
+    }
     if (!user?.email) {
       toast.error("Please sign in before placing an order.");
       return;
@@ -66,7 +73,7 @@ export default function OrderModal({ item, isOpen, onClose, onSuccess }) {
 
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isOpen && item && (
         <div
           className="fixed inset-0 bg-black bg-opacity-40 dark:bg-opacity-60 flex items-center justify-center z-50 p-4"
           onClick={onClose}

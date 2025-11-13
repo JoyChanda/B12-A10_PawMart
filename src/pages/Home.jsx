@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import API from "../services/api";
 import ListingCard from "../components/ListingCard";
 import CategoryCard from "../components/CategoryCard";
@@ -8,37 +8,58 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function Home() {
   const [listings, setListings] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const slides = [
-    {
-      img: "https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=1080&auto=format&fit=crop",
-      tagline: "Find Your Furry Friend Today! 🐾",
-      subtagline: "Adopt, don’t shop — give a pet a loving home.",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1738",
-      tagline: "Because Every Pet Deserves Love and Care.",
-      subtagline: "Explore our listings and bring happiness home.",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1551779891-b83901e1f8b3?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-      tagline: "Happy Pets, Happy Owners! 🐕",
-      subtagline: "Find your perfect companion today.",
-    },
-  ];
+  const extractListings = useCallback((payload) => {
+    if (!payload) return [];
+    if (Array.isArray(payload?.data)) return payload.data;
+    if (Array.isArray(payload)) return payload;
+    if (Array.isArray(payload?.items)) return payload.items;
+    return [];
+  }, []);
+
+  const slides = useMemo(
+    () => [
+      {
+        img: "https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=1080&auto=format&fit=crop",
+        tagline: "Find Your Furry Friend Today! 🐾",
+        subtagline: "Adopt, don’t shop — give a pet a loving home.",
+      },
+      {
+        img: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1738",
+        tagline: "Because Every Pet Deserves Love and Care.",
+        subtagline: "Explore our listings and bring happiness home.",
+      },
+      {
+        img: "https://images.unsplash.com/photo-1551779891-b83901e1f8b3?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
+        tagline: "Happy Pets, Happy Owners! 🐕",
+        subtagline: "Find your perfect companion today.",
+      },
+    ],
+    []
+  );
 
   useEffect(() => {
     document.title = "PawMart - Home";
 
     (async () => {
+      setIsLoading(true);
+      setErrorMessage("");
       try {
         const res = await API.get("/listings", { params: { limit: 6 } });
-        setListings(Array.isArray(res.data) ? res.data : []);
+        setListings(extractListings(res.data));
       } catch (err) {
         if (err.code !== "ERR_NETWORK" && err.code !== "ECONNREFUSED") {
           console.error("Error fetching listings:", err);
         }
         setListings([]);
+        setErrorMessage(
+          err?.response?.data?.error ||
+            "We couldn't load the latest listings. Please try again shortly."
+        );
+      } finally {
+        setIsLoading(false);
       }
     })();
 
@@ -46,7 +67,7 @@ export default function Home() {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [extractListings, slides.length]);
 
   const categories = [
     { name: "Pets", emoji: "🐶" },
@@ -145,7 +166,15 @@ export default function Home() {
             Recent Listings
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {Array.isArray(listings) && listings.length > 0 ? (
+            {isLoading ? (
+              <p className="text-center text-gray-500 dark:text-gray-400 col-span-full">
+                Loading recent listings...
+              </p>
+            ) : errorMessage ? (
+              <p className="text-center text-red-500 dark:text-red-400 col-span-full">
+                {errorMessage}
+              </p>
+            ) : Array.isArray(listings) && listings.length > 0 ? (
               listings.map((l) => <ListingCard key={l._id} item={l} />)
             ) : (
               <p className="text-center text-gray-500 dark:text-gray-400 col-span-full">

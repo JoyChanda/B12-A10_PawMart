@@ -133,10 +133,7 @@ export default function MyOrders() {
         <button
           onClick={downloadPDF}
           disabled={!orders || orders.length === 0}
-          className="w-full sm:w-auto px-5 py-2.5 bg-orange-600 text-white rounded-lg 
-                     hover:bg-orange-700 dark:bg-orange-600 dark:hover:bg-orange-700 
-                     transition-colors duration-200 text-sm sm:text-base font-semibold
-                     disabled:opacity-80 disabled:cursor-not-allowed"
+          className="w-full sm:w-auto px-5 py-2.5 bg-orange-500 dark:bg-orange-600 text-white rounded-lg hover:bg-orange-600 dark:hover:bg-orange-700 transition-colors duration-200 text-sm sm:text-base font-semibold disabled:cursor-not-allowed"
         >
           Download Report
         </button>

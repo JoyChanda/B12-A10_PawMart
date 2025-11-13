@@ -7,14 +7,12 @@ export default function NotFound404() {
   useEffect(() => {
     document.title = "PawMart - 404 Not Found";
 
-    // ✅ Hide Navbar and Footer dynamically when 404 loads
     const navbar = document.querySelector("nav");
     const footer = document.querySelector("footer");
 
     if (navbar) navbar.style.display = "none";
     if (footer) footer.style.display = "none";
 
-    // ✅ Restore when leaving the page
     return () => {
       if (navbar) navbar.style.display = "";
       if (footer) footer.style.display = "";

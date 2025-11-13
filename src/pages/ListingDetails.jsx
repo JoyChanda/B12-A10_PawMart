@@ -30,9 +30,7 @@ export default function ListingDetails() {
     })();
   }, [id]);
 
-  const handleOrderSuccess = () => {
-    // Order was successfully placed, modal will close automatically
-  };
+  const handleOrderSuccess = () => {};
 
   if (!item)
     return (

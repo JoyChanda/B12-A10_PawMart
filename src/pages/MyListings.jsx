@@ -75,7 +75,6 @@ export default function MyListings() {
 
   useEffect(() => {
     fetchListings();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.email]);
 
   const openEditModal = (listing) => {

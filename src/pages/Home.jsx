@@ -63,7 +63,7 @@ export default function Home() {
   return (
     <div className="bg-slate-100 dark:bg-slate-900 transition-colors duration-500 overflow-hidden">
       {/* Hero Section */}
-      <section className="relative h-[80vh] min-h-[700px] flex items-center pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-950/20">
+      <section className="relative h-[85vh] min-h-[750px] flex items-start pt-32 lg:pt-40 pb-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-950/20">
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full relative z-10">
           <Motion.div 
             initial={{ opacity: 0, x: -30 }}
@@ -189,7 +189,7 @@ export default function Home() {
         <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-slate-100 dark:from-slate-900 to-transparent z-0"></div>
       </section>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32 py-24">
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32 py-32 mt-12">
         {/* Section 2: Categories Section */}
         <section id="categories" className="scroll-mt-32">
           <div className="text-center space-y-4 mb-16">
@@ -203,7 +203,7 @@ export default function Home() {
               Quick Search
             </Motion.div>
             <h2 className="text-4xl md:text-5xl font-display font-bold text-slate-950 dark:text-white">Browse Categories</h2>
-            <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
+            <p className="text-slate-700 dark:text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
               Find exactly what your pet needs with our curated categories.
             </p>
           </div>
@@ -218,7 +218,7 @@ export default function Home() {
         <section className="space-y-16">
           <div className="text-center space-y-4">
             <h2 className="text-4xl font-display font-bold text-slate-950 dark:text-white">How PawMart Works</h2>
-            <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg">
+            <p className="text-slate-700 dark:text-slate-400 max-w-2xl mx-auto text-lg font-medium leading-relaxed">
               Your journey to finding a new family member is simple and safe.
             </p>
           </div>
@@ -246,7 +246,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-end justify-between gap-6">
             <div className="space-y-4 text-center sm:text-left">
               <h2 className="text-4xl font-display font-bold text-slate-950 dark:text-white">Recent Listings</h2>
-              <p className="text-slate-600 dark:text-slate-400 max-w-xl text-lg">
+              <p className="text-slate-700 dark:text-slate-400 max-w-xl text-lg font-medium">
                 The latest furry friends and pet supplies added to our marketplace.
               </p>
             </div>
@@ -314,7 +314,7 @@ export default function Home() {
         <section className="space-y-16">
           <div className="text-center space-y-4">
             <h2 className="text-4xl font-display font-bold text-slate-950 dark:text-white">Pet Care Insights</h2>
-            <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
+            <p className="text-slate-700 dark:text-slate-400 max-w-2xl mx-auto text-lg font-medium leading-relaxed">
               Learn how to take the best care of your furry family members.
             </p>
           </div>
@@ -346,7 +346,7 @@ export default function Home() {
         <section className="space-y-16 pb-12">
           <div className="text-center space-y-4">
             <h2 className="text-4xl font-display font-bold text-slate-950 dark:text-white">Our Pet Heroes</h2>
-            <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg">
+            <p className="text-slate-700 dark:text-slate-400 max-w-2xl mx-auto text-lg font-medium">
               Real stories from real people who made a difference with PawMart.
             </p>
           </div>
@@ -368,7 +368,7 @@ export default function Home() {
                   <h4 className="font-bold text-slate-950 dark:text-white text-xl">{hero.name}</h4>
                   <p className="text-primary-600 text-sm font-black uppercase tracking-widest mt-1">{hero.role}</p>
                 </div>
-                <p className="text-slate-600 dark:text-slate-400 text-base italic leading-relaxed font-medium">
+                <p className="text-slate-700 dark:text-slate-400 text-base italic leading-relaxed font-semibold">
                   &ldquo;{hero.story}&rdquo;
                 </p>
               </Motion.div>
@@ -420,7 +420,7 @@ export default function Home() {
            <div className="max-w-4xl mx-auto space-y-10">
               <div className="text-center space-y-4">
                 <h2 className="text-4xl font-display font-bold text-slate-950 dark:text-white">Common Questions</h2>
-                <p className="text-lg text-slate-600 dark:text-slate-400">Everything you need to know about adopting through PawMart.</p>
+                <p className="text-lg text-slate-700 dark:text-slate-400 font-medium">Everything you need to know about adopting through PawMart.</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                  {[

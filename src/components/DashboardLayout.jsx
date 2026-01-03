@@ -18,6 +18,7 @@ import {
   Settings,
   Bell
 } from "lucide-react";
+import DarkModeToggle from "./DarkModeToggle";
 
 export default function DashboardLayout() {
   const { user } = useAuth();
@@ -69,6 +70,9 @@ export default function DashboardLayout() {
 
           {/* Right: Notifications & Profile */}
           <div className="flex items-center gap-3">
+            {/* Dark Mode Toggle */}
+            <DarkModeToggle />
+
             {/* Notifications */}
             <button className="relative p-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
               <Bell size={20} />

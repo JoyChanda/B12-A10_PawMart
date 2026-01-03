@@ -103,134 +103,131 @@ export default function MyOrders() {
   };
 
   return (
-    <div className="bg-slate-50 dark:bg-slate-900 min-h-screen pt-24 pb-20 transition-colors duration-500">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
-           <Motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="space-y-2"
-          >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 font-bold text-xs uppercase tracking-widest border border-primary-200 dark:border-primary-800">
-               <ShoppingBag size={12} />
-               <span>Post-Purchase Log</span>
-            </div>
-            <h1 className="text-4xl sm:text-5xl font-display font-bold text-slate-900 dark:text-white">
-              My Orders
-            </h1>
-            <p className="text-slate-500 dark:text-slate-400 text-lg max-w-xl">
-              Monitor your acquisition history and manage active adoption requests in real-time.
-            </p>
-          </Motion.div>
-          <Motion.button
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            onClick={downloadPDF}
-            disabled={!orders || orders.length === 0}
-            className="btn-premium px-8 py-4 flex items-center gap-3 disabled:opacity-50 group"
-          >
-            <Download size={20} className="group-hover:translate-y-0.5 transition-transform" />
-            <span className="font-bold">Export PDF Report</span>
-          </Motion.button>
-        </div>
+    <div className="space-y-10">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+         <Motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="space-y-4"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-50 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400 font-bold text-xs uppercase tracking-widest border border-violet-100 dark:border-violet-800">
+             <ShoppingBag size={12} />
+             <span>Transaction Ledger</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-display font-bold text-slate-900 dark:text-white leading-tight">
+            My Orders
+          </h1>
+          <p className="text-slate-500 dark:text-slate-400 text-lg max-w-xl leading-relaxed">
+            Monitor your acquisition history and manage active adoption requests in real-time.
+          </p>
+        </Motion.div>
+        <Motion.button
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          onClick={downloadPDF}
+          disabled={!orders || orders.length === 0}
+          className="btn-premium px-8 py-4 flex items-center gap-3 disabled:opacity-50 group shadow-xl"
+        >
+          <Download size={20} className="group-hover:translate-y-0.5 transition-transform" />
+          <span className="font-bold">Export PDF Report</span>
+        </Motion.button>
+      </div>
 
-        {/* Content */}
-        <div className="glass-card rounded-[2.5rem] overflow-hidden shadow-2xl shadow-primary-500/5">
-           <div className="overflow-x-auto">
-             <table className="w-full text-left">
-                <thead>
-                  <tr className="bg-slate-100/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
-                    <th className="px-8 py-6 text-xs font-bold uppercase tracking-widest text-slate-500">Product</th>
-                    <th className="px-8 py-6 text-xs font-bold uppercase tracking-widest text-slate-500">Invoice</th>
-                    <th className="px-8 py-6 text-xs font-bold uppercase tracking-widest text-slate-500">Logistics</th>
-                    <th className="px-8 py-6 text-xs font-bold uppercase tracking-widest text-slate-500">Fulfillment</th>
-                    <th className="px-8 py-6 text-xs font-bold uppercase tracking-widest text-slate-500 text-right">Control</th>
+      {/* Content */}
+      <div className="bg-white dark:bg-slate-800/50 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-primary-500/5 border border-slate-100 dark:border-slate-700/50">
+         <div className="overflow-x-auto">
+           <table className="w-full text-left">
+              <thead>
+                <tr className="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700">
+                  <th className="px-8 py-6 text-xs font-black uppercase tracking-widest text-slate-400">Product</th>
+                  <th className="px-8 py-6 text-xs font-black uppercase tracking-widest text-slate-400">Invoice</th>
+                  <th className="px-8 py-6 text-xs font-black uppercase tracking-widest text-slate-400">Logistics</th>
+                  <th className="px-8 py-6 text-xs font-black uppercase tracking-widest text-slate-400">Fulfillment</th>
+                  <th className="px-8 py-6 text-xs font-black uppercase tracking-widest text-slate-400 text-right">Control</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                {isLoading ? (
+                  <tr>
+                    <td colSpan="5" className="py-32">
+                      <div className="flex flex-col items-center justify-center space-y-4">
+                        <Loader2 className="w-10 h-10 text-primary-500 animate-spin" />
+                        <p className="text-slate-400 font-bold">Securely fetching history...</p>
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                  {isLoading ? (
-                    <tr>
-                      <td colSpan="5" className="py-32">
-                        <div className="flex flex-col items-center justify-center space-y-4">
-                          <Loader2 className="w-10 h-10 text-primary-500 animate-spin" />
-                          <p className="text-slate-400 font-bold">Securely fetching history...</p>
-                        </div>
-                      </td>
-                    </tr>
-                  ) : orders.length === 0 ? (
-                    <tr>
-                      <td colSpan="5" className="py-32 text-center">
-                         <div className="flex flex-col items-center justify-center space-y-6">
-                            <div className="p-6 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-300">
-                               <ClipboardList size={64} />
+                ) : orders.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="py-32 text-center">
+                       <div className="flex flex-col items-center justify-center space-y-6">
+                          <div className="p-8 bg-slate-50 dark:bg-slate-900 rounded-full text-slate-300">
+                             <ClipboardList size={64} />
+                          </div>
+                          <div>
+                             <h3 className="text-2xl font-bold dark:text-white">Log is Currently Empty</h3>
+                             <p className="text-slate-500 mt-1 font-medium">{errorMessage || "You haven't initiated any orders yet."}</p>
+                          </div>
+                       </div>
+                    </td>
+                  </tr>
+                ) : (
+                  orders.map((o) => (
+                    <tr key={o?._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors group">
+                      <td className="px-8 py-6">
+                         <div className="flex items-center gap-4">
+                            <div className="p-3 bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-xl shadow-sm">
+                               <Package size={24} />
                             </div>
-                            <div>
-                               <h3 className="text-2xl font-bold dark:text-white">Transaction Log Empty</h3>
-                               <p className="text-slate-500 mt-1">{errorMessage || "You haven't made any purchases yet."}</p>
+                            <p className="font-bold text-slate-950 dark:text-white text-lg">{o?.productName || "Item Removed"}</p>
+                         </div>
+                      </td>
+                      <td className="px-8 py-6">
+                         <div className="space-y-1">
+                            <p className="font-black text-slate-950 dark:text-white flex items-center gap-1.5 text-lg">
+                               <DollarSign size={16} className="text-emerald-500" />
+                               {o?.price === 0 ? <span className="text-emerald-500">FREE</span> : `$${Number(o?.price).toFixed(2)}`}
+                            </p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Quantity: {o?.quantity || 1}</p>
+                         </div>
+                      </td>
+                      <td className="px-8 py-6">
+                         <div className="space-y-1">
+                            <div className="flex items-center gap-2 text-sm text-slate-950 dark:text-slate-200 font-bold">
+                               <User size={14} className="text-primary-500" />
+                               {o?.buyerName || "User"}
+                            </div>
+                            <div className="flex items-center gap-2 text-xs text-slate-500 font-black">
+                               <FileText size={14} />
+                               {o?.phone || "Private"}
                             </div>
                          </div>
                       </td>
+                      <td className="px-8 py-6">
+                         <div className="space-y-1">
+                            <p className="text-sm font-bold text-slate-700 dark:text-slate-300 line-clamp-1">{o?.address || "On-site Pickup"}</p>
+                            <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-black uppercase tracking-widest">
+                               <Calendar size={12} />
+                               {o?.date ? new Date(o.date).toLocaleDateString() : "Processing"}
+                            </div>
+                         </div>
+                      </td>
+                      <td className="px-8 py-6 text-right">
+                         <button 
+                           onClick={() => handleDeleteOrder(o?._id)} 
+                           disabled={deletingOrderId === o?._id}
+                           className="p-3 bg-white dark:bg-slate-800 text-red-500 rounded-xl hover:bg-red-600 hover:text-white transition-all shadow-md border border-slate-100 dark:border-slate-700 disabled:opacity-50"
+                         >
+                           {deletingOrderId === o?._id ? <Loader2 size={20} className="animate-spin" /> : <Trash2 size={20} />}
+                         </button>
+                      </td>
                     </tr>
-                  ) : (
-                    orders.map((o) => (
-                      <tr key={o?._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
-                        <td className="px-8 py-6">
-                           <div className="flex items-center gap-4">
-                              <div className="p-3 bg-primary-50 dark:bg-primary-900/20 text-primary-500 rounded-xl">
-                                 <Package size={24} />
-                              </div>
-                              <p className="font-bold text-slate-900 dark:text-white text-lg">{o?.productName || "Deleted Product"}</p>
-                           </div>
-                        </td>
-                        <td className="px-8 py-6">
-                           <div className="space-y-1">
-                              <p className="font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-                                 <DollarSign size={14} className="text-emerald-500" />
-                                 {o?.price === 0 ? <span className="text-emerald-500">FREE</span> : `$${Number(o?.price).toFixed(2)}`}
-                              </p>
-                              <p className="text-xs font-bold text-slate-400 uppercase tracking-tighter">Qty: {o?.quantity || 1}</p>
-                           </div>
-                        </td>
-                        <td className="px-8 py-6">
-                           <div className="space-y-1">
-                              <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300 font-medium">
-                                 <User size={14} className="text-primary-400" />
-                                 {o?.buyerName || "Anonymous"}
-                              </div>
-                              <div className="flex items-center gap-2 text-xs text-slate-500 font-bold">
-                                 <FileText size={14} />
-                                 {o?.phone || "No Contact"}
-                              </div>
-                           </div>
-                        </td>
-                        <td className="px-8 py-6">
-                           <div className="space-y-1">
-                              <p className="text-sm font-bold text-slate-700 dark:text-slate-200 line-clamp-1">{o?.address || "Global Pickup"}</p>
-                              <div className="flex items-center gap-1.5 text-xs text-slate-400 font-bold">
-                                 <Calendar size={12} />
-                                 {o?.date ? new Date(o.date).toLocaleDateString() : "Pending"}
-                              </div>
-                           </div>
-                        </td>
-                        <td className="px-8 py-6 text-right">
-                           <button 
-                             onClick={() => handleDeleteOrder(o?._id)} 
-                             disabled={deletingOrderId === o?._id}
-                             className="p-3 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm disabled:opacity-50"
-                           >
-                             {deletingOrderId === o?._id ? <Loader2 size={20} className="animate-spin" /> : <Trash2 size={20} />}
-                           </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-             </table>
-           </div>
-        </div>
+                  ))
+                )}
+              </tbody>
+           </table>
+         </div>
       </div>
     </div>
   );
 }
-

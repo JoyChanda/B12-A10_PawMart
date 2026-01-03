@@ -227,7 +227,7 @@ export default function ListingDetails() {
                 </div>
                 <div className="flex-1">
                   <h4 className="font-bold text-slate-950 dark:text-white text-lg">Trusted Provider</h4>
-                  <p className="text-sm text-slate-600 dark:text-slate-400">Verified member since 2024</p>
+                  <p className="text-sm text-slate-800 dark:text-slate-400 font-medium">Verified member since 2024</p>
                 </div>
                 <button className="text-primary-600 font-bold hover:underline">Contact</button>
               </div>
@@ -243,7 +243,7 @@ export default function ListingDetails() {
               <Package className="text-primary-600" />
               Overview & Description
             </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+            <p className="text-xl text-slate-800 dark:text-slate-300 leading-relaxed font-medium">
               {item.description || "This is a premium pet listing with complete health checkups and vaccination records. The pet is very friendly and well-trained, making it perfect for families with children. All necessary documentation and certifications are available."}
             </p>
             <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -330,7 +330,7 @@ export default function ListingDetails() {
                       ))}
                     </div>
                   </div>
-                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{review.comment}</p>
+                  <p className="text-slate-800 dark:text-slate-400 leading-relaxed font-medium">{review.comment}</p>
                 </div>
               ))}
             </div>

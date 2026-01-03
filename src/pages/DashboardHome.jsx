@@ -314,9 +314,9 @@ export default function DashboardHome() {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <img
-                            src={listing.image}
+                            src={listing.image || "https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=200&auto=format&fit=crop"}
                             alt={listing.name}
-                            className="w-10 h-10 rounded-lg object-cover"
+                            className="w-12 h-12 rounded-lg object-cover border border-slate-200 dark:border-slate-700 shadow-sm"
                           />
                           <span className="font-semibold text-slate-950 dark:text-white">{listing.name}</span>
                         </div>

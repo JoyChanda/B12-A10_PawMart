@@ -88,7 +88,7 @@ export default function About() {
             <h1 className="text-4xl sm:text-6xl font-display font-bold text-slate-950 dark:text-white leading-tight">
               About PawMart
             </h1>
-            <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-xl text-slate-800 dark:text-slate-400 font-medium leading-relaxed">
               We're on a mission to create a world where every pet finds a loving home and every family discovers their perfect companion.
             </p>
           </Motion.div>
@@ -126,13 +126,13 @@ export default function About() {
         >
           <h2 className="text-3xl font-display font-bold text-slate-950 dark:text-white mb-6">Our Story</h2>
           <div className="prose prose-lg dark:prose-invert max-w-none">
-            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+            <p className="text-lg text-slate-800 dark:text-slate-400 leading-relaxed font-medium mb-4">
               PawMart was born from a simple belief: every pet deserves a loving home, and every family deserves the joy that comes with pet companionship. Founded in 2020, we started as a small platform connecting local pet adopters with responsible breeders and shelters.
             </p>
-            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+            <p className="text-lg text-slate-800 dark:text-slate-400 leading-relaxed font-medium mb-4">
               Today, we've grown into a trusted community of over 10,000 happy families and 5,000 verified sellers across 50+ cities. Our platform has facilitated thousands of successful adoptions, each one representing a new beginning for both pets and their human companions.
             </p>
-            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-lg text-slate-800 dark:text-slate-400 leading-relaxed font-medium">
               But our mission goes beyond just connecting pets with families. We're committed to promoting responsible pet ownership, supporting animal welfare initiatives, and building a community where every member shares our passion for making the world a better place for our furry friends.
             </p>
           </div>
@@ -163,7 +163,7 @@ export default function About() {
                 <value.icon size={28} />
               </div>
               <h3 className="text-xl font-bold text-slate-950 dark:text-white mb-3">{value.title}</h3>
-              <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{value.description}</p>
+              <p className="text-slate-700 dark:text-slate-400 leading-relaxed font-medium">{value.description}</p>
             </Motion.div>
           ))}
         </div>

@@ -169,7 +169,7 @@ export default function PetsSupplies() {
               <h1 className="text-4xl sm:text-5xl font-display font-bold text-slate-950 dark:text-white">
                 {categoryName ? decodeURIComponent(categoryName) : "Marketplace"}
               </h1>
-              <p className="text-slate-600 dark:text-slate-400 max-w-2xl text-lg">
+              <p className="text-slate-800 dark:text-slate-400 max-w-2xl text-lg font-medium leading-relaxed">
                 Discover high-quality pets and curated supplies from our verified community.
               </p>
             </div>
@@ -344,7 +344,7 @@ export default function PetsSupplies() {
             </div>
             <div className="text-center space-y-2">
               <h3 className="text-2xl font-bold text-slate-950 dark:text-white">No Results Found</h3>
-              <p className="text-slate-600 dark:text-slate-400 max-w-md mx-auto">
+              <p className="text-slate-800 dark:text-slate-400 max-w-md mx-auto">
                 We couldn't find anything matching your current filters. 
                 Try adjusting your search or filters.
               </p>

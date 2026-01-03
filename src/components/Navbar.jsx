@@ -23,6 +23,11 @@ const Navbar = ({ user, handleLogout }) => {
     { name: "Help", path: "/help" },
   ];
 
+  const visibleNavLinks = useMemo(() => {
+    if (!user) return navLinks;
+    return navLinks.filter(link => !["About", "Contact", "Help"].includes(link.name));
+  }, [user]);
+
   const authLinks = [
     { name: "Dashboard", path: "/dashboard" },
     { name: "Add Listing", path: "/dashboard/add-listing" },
@@ -52,7 +57,7 @@ const Navbar = ({ user, handleLogout }) => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-1 lg:gap-2">
-            {[...navLinks, ...(user ? authLinks : [])].map((link) => (
+            {[...visibleNavLinks, ...(user ? authLinks : [])].map((link) => (
               <NavLink
                 key={link.path + link.name}
                 to={link.path}
@@ -126,7 +131,7 @@ const Navbar = ({ user, handleLogout }) => {
             className="md:hidden absolute top-full left-0 right-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden"
           >
             <div className="px-6 py-8 space-y-3">
-              {[...navLinks, ...(user ? authLinks : [])].map((link) => (
+              {[...visibleNavLinks, ...(user ? authLinks : [])].map((link) => (
                 <NavLink
                   key={link.path + link.name}
                   to={link.path}

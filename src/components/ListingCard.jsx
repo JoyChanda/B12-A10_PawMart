@@ -56,7 +56,7 @@ export default function ListingCard({ item }) {
         </h3>
 
         {/* Description */}
-        <p className="text-sm text-slate-600 dark:text-slate-400 line-clamp-2 leading-relaxed mb-4">
+        <p className="text-sm text-slate-700 dark:text-slate-400 line-clamp-2 leading-relaxed mb-4 font-medium">
           {item.description || "Discover this amazing pet looking for a loving home. Contact us for more details."}
         </p>
 

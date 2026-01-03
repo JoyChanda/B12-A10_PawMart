@@ -168,7 +168,7 @@ export default function DashboardLayout() {
                   `flex items-center gap-3 px-4 py-3.5 rounded-xl font-semibold transition-all ${
                     isActive
                       ? "bg-primary-600 text-white shadow-lg shadow-primary-600/25"
-                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
+                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 font-bold"
                   }`
                 }
               >
@@ -200,7 +200,7 @@ export default function DashboardLayout() {
                       `flex items-center gap-3 px-4 py-3.5 rounded-xl font-semibold transition-all ${
                         isActive
                           ? "bg-primary-600 text-white shadow-lg shadow-primary-600/25"
-                          : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
+                          : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 font-bold"
                       }`
                     }
                   >

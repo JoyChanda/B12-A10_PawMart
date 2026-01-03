@@ -199,7 +199,7 @@ export default function Register() {
             <h2 className="text-3xl sm:text-4xl font-display font-bold text-slate-950 dark:text-white">
               Create Account
             </h2>
-            <p className="text-slate-600 dark:text-slate-400">
+            <p className="text-slate-800 dark:text-slate-400 font-medium">
               Join PawMart and start connecting with your future pets!
             </p>
           </div>
@@ -207,7 +207,7 @@ export default function Register() {
           <form onSubmit={handleRegister} className="space-y-5">
             {/* Name */}
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Full Name</label>
+               <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">Full Name</label>
               <div className="relative group">
                 <User className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${
                   errors.name ? "text-red-500" : getFieldStatus("name") === "success" ? "text-emerald-500" : "text-slate-400 group-focus-within:text-primary-600"
@@ -250,7 +250,7 @@ export default function Register() {
 
             {/* Email */}
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Email Address</label>
+               <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">Email Address</label>
               <div className="relative group">
                 <Mail className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${
                   errors.email ? "text-red-500" : getFieldStatus("email") === "success" ? "text-emerald-500" : "text-slate-400 group-focus-within:text-primary-600"
@@ -293,7 +293,7 @@ export default function Register() {
 
             {/* Password */}
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Password</label>
+               <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">Password</label>
               <div className="relative group">
                 <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${
                   errors.password ? "text-red-500" : getFieldStatus("password") === "success" ? "text-emerald-500" : "text-slate-400 group-focus-within:text-primary-600"
@@ -345,7 +345,7 @@ export default function Register() {
 
             {/* Photo URL */}
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Photo URL</label>
+               <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">Photo URL</label>
               <div className="relative group">
                 <Camera className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${
                   errors.photo ? "text-red-500" : getFieldStatus("photo") === "success" ? "text-emerald-500" : "text-slate-400 group-focus-within:text-primary-600"
@@ -427,7 +427,7 @@ export default function Register() {
           </button>
 
           {/* Login Link */}
-          <p className="text-center mt-8 text-slate-600 dark:text-slate-400">
+           <p className="text-center mt-8 text-slate-800 dark:text-slate-400 font-medium">
             Already have an account?{" "}
             <Link
               to="/login"

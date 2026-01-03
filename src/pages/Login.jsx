@@ -160,7 +160,7 @@ const Login = () => {
             <h2 className="text-3xl sm:text-4xl font-display font-bold text-slate-950 dark:text-white">
               Welcome Back
             </h2>
-            <p className="text-slate-600 dark:text-slate-400">
+            <p className="text-slate-800 dark:text-slate-400 font-medium">
               Pick up where you left off. Your furry friends are waiting!
             </p>
           </div>
@@ -179,7 +179,7 @@ const Login = () => {
           <form onSubmit={handleLogin} className="space-y-6">
             {/* Email */}
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Email Address</label>
+               <label className="text-sm font-bold text-slate-800 dark:text-slate-300 ml-1">Email Address</label>
               <div className="relative group">
                 <Mail className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${
                   errors.email ? "text-red-500" : "text-slate-400 group-focus-within:text-primary-600"
@@ -213,7 +213,7 @@ const Login = () => {
 
             {/* Password */}
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Password</label>
+               <label className="text-sm font-bold text-slate-800 dark:text-slate-300 ml-1">Password</label>
               <div className="relative group">
                 <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${
                   errors.password ? "text-red-500" : "text-slate-400 group-focus-within:text-primary-600"
@@ -293,7 +293,7 @@ const Login = () => {
           </button>
 
           {/* Register Link */}
-          <p className="text-center mt-8 text-slate-600 dark:text-slate-400">
+           <p className="text-center mt-8 text-slate-800 dark:text-slate-400 font-medium">
             Don't have an account?{" "}
             <Link
               to="/register"

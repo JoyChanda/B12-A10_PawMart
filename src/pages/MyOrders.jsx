@@ -118,7 +118,7 @@ export default function MyOrders() {
           <h1 className="text-4xl sm:text-5xl font-display font-bold text-slate-900 dark:text-white leading-tight">
             My Orders
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 text-lg max-w-xl leading-relaxed">
+          <p className="text-slate-800 dark:text-slate-400 text-lg max-w-xl leading-relaxed font-medium">
             Monitor your acquisition history and manage active adoption requests in real-time.
           </p>
         </Motion.div>
@@ -166,7 +166,7 @@ export default function MyOrders() {
                           </div>
                           <div>
                              <h3 className="text-2xl font-bold dark:text-white">Log is Currently Empty</h3>
-                             <p className="text-slate-500 mt-1 font-medium">{errorMessage || "You haven't initiated any orders yet."}</p>
+                             <p className="text-slate-800 dark:text-slate-400 mt-1 font-bold">{errorMessage || "You haven't initiated any orders yet."}</p>
                           </div>
                        </div>
                     </td>
@@ -205,7 +205,7 @@ export default function MyOrders() {
                       </td>
                       <td className="px-8 py-6">
                          <div className="space-y-1">
-                            <p className="text-sm font-bold text-slate-700 dark:text-slate-300 line-clamp-1">{o?.address || "On-site Pickup"}</p>
+                            <p className="text-sm font-bold text-slate-900 dark:text-slate-300 line-clamp-1">{o?.address || "On-site Pickup"}</p>
                             <div className="flex items-center gap-1.5 text-[10px] text-slate-400 font-black uppercase tracking-widest">
                                <Calendar size={12} />
                                {o?.date ? new Date(o.date).toLocaleDateString() : "Processing"}

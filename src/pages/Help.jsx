@@ -156,7 +156,7 @@ export default function Help() {
             <h1 className="text-4xl sm:text-6xl font-display font-bold text-slate-950 dark:text-white leading-tight">
               How Can We Help?
             </h1>
-            <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-xl text-slate-800 dark:text-slate-400 leading-relaxed font-medium">
               Find answers to common questions and get the support you need
             </p>
 
@@ -190,7 +190,7 @@ export default function Help() {
                 <category.icon size={28} />
               </div>
               <h3 className="text-xl font-bold text-slate-950 dark:text-white mb-2">{category.title}</h3>
-              <p className="text-slate-600 dark:text-slate-400 mb-4">{category.description}</p>
+              <p className="text-slate-700 dark:text-slate-400 mb-4 font-medium">{category.description}</p>
               <p className="text-sm font-bold text-primary-600 dark:text-primary-400">
                 {category.articles} articles
               </p>
@@ -205,7 +205,7 @@ export default function Help() {
           <h2 className="text-3xl sm:text-4xl font-display font-bold text-slate-950 dark:text-white mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg text-slate-600 dark:text-slate-400">
+          <p className="text-lg text-slate-800 dark:text-slate-400 font-medium">
             {searchTerm ? `Found ${filteredFaqs.length} results` : "Quick answers to common questions"}
           </p>
         </div>
@@ -246,7 +246,7 @@ export default function Help() {
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <div className="px-6 pb-6 text-slate-600 dark:text-slate-400 leading-relaxed">
+                    <div className="px-6 pb-6 text-slate-700 dark:text-slate-400 leading-relaxed font-medium">
                       {faq.answer}
                     </div>
                   </Motion.div>

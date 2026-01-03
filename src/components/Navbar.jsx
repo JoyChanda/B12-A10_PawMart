@@ -158,7 +158,7 @@ const Navbar = ({ user, handleLogout }) => {
                       />
                       <div>
                         <p className="font-extrabold text-xl text-slate-950 dark:text-white leading-tight">{user.displayName}</p>
-                        <p className="text-sm text-slate-600 dark:text-slate-400 font-bold">{user.email}</p>
+                        <p className="text-sm text-slate-800 dark:text-slate-400 font-extrabold">{user.email}</p>
                       </div>
                     </div>
                     <button

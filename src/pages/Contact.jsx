@@ -93,7 +93,7 @@ export default function Contact() {
             <h1 className="text-4xl sm:text-6xl font-display font-bold text-slate-950 dark:text-white leading-tight">
               Get in Touch
             </h1>
-            <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-xl text-slate-800 dark:text-slate-400 leading-relaxed font-medium">
               Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
             </p>
           </Motion.div>
@@ -139,7 +139,7 @@ export default function Contact() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Name */}
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Your Name</label>
+                <label className="text-sm font-bold text-slate-900 dark:text-slate-300">Your Name</label>
                 <input
                   type="text"
                   required
@@ -152,7 +152,7 @@ export default function Contact() {
 
               {/* Email */}
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Email Address</label>
+                <label className="text-sm font-bold text-slate-900 dark:text-slate-300">Email Address</label>
                 <input
                   type="email"
                   required
@@ -165,7 +165,7 @@ export default function Contact() {
 
               {/* Subject */}
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Subject</label>
+                <label className="text-sm font-bold text-slate-900 dark:text-slate-300">Subject</label>
                 <input
                   type="text"
                   required
@@ -178,7 +178,7 @@ export default function Contact() {
 
               {/* Message */}
               <div className="space-y-2">
-                <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Message</label>
+                <label className="text-sm font-bold text-slate-900 dark:text-slate-300">Message</label>
                 <textarea
                   required
                   rows="5"
@@ -227,15 +227,15 @@ export default function Contact() {
               </div>
               <div className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-400">Monday - Friday</span>
+                   <span className="text-slate-700 dark:text-slate-400 font-medium">Monday - Friday</span>
                   <span className="font-bold text-slate-950 dark:text-white">9:00 AM - 6:00 PM</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-400">Saturday</span>
+                   <span className="text-slate-700 dark:text-slate-400 font-medium">Saturday</span>
                   <span className="font-bold text-slate-950 dark:text-white">10:00 AM - 4:00 PM</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-600 dark:text-slate-400">Sunday</span>
+                   <span className="text-slate-700 dark:text-slate-400 font-medium">Sunday</span>
                   <span className="font-bold text-slate-950 dark:text-white">Closed</span>
                 </div>
               </div>

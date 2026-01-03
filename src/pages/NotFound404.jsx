@@ -63,7 +63,7 @@ export default function NotFound404() {
           <h2 className="text-4xl sm:text-5xl font-display font-bold text-slate-900 dark:text-white">
             Lost Your Way? 🐾
           </h2>
-          <p className="text-lg text-slate-500 dark:text-slate-400 font-medium">
+          <p className="text-lg text-slate-700 dark:text-slate-400 font-medium">
             It seems the page you're sniffing for has wandered away. Don't worry, even the best pets get lost sometimes.
           </p>
         </div>

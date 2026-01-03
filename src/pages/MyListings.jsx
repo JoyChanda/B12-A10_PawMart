@@ -154,7 +154,7 @@ export default function MyListings() {
           <h1 className="text-4xl sm:text-5xl font-display font-bold text-slate-900 dark:text-white leading-tight">
             My Listings
           </h1>
-          <p className="text-slate-500 dark:text-slate-400 text-lg max-w-xl leading-relaxed">
+          <p className="text-slate-800 dark:text-slate-400 text-lg max-w-xl leading-relaxed font-medium">
             Take full control of your published marketplace items. Edit, update, or remove them at any time.
           </p>
         </Motion.div>
@@ -201,7 +201,7 @@ export default function MyListings() {
                       </div>
                       <div className="text-center">
                         <h3 className="text-2xl font-bold text-slate-900 dark:text-white">No Listings Found</h3>
-                        <p className="text-slate-500 mt-2">You haven't added anything to the marketplace yet.</p>
+                        <p className="text-slate-800 dark:text-slate-400 mt-2 font-medium">You haven't added anything to the marketplace yet.</p>
                       </div>
                     </div>
                   </td>
@@ -291,29 +291,29 @@ export default function MyListings() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-500 ml-1">Pet/Product Name</label>
+                    <label className="text-sm font-bold text-slate-900 dark:text-slate-500 ml-1">Pet/Product Name</label>
                     <input value={form.name} onChange={(e) => handleEditField("name", e.target.value)} className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white font-bold" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-500 ml-1">Category</label>
+                    <label className="text-sm font-bold text-slate-900 dark:text-slate-500 ml-1">Category</label>
                     <select value={form.category} onChange={(e) => handleEditField("category", e.target.value)} className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white font-bold appearance-none">
                       {categories.map((cat) => ( <option key={cat}>{cat}</option> ))}
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-500 ml-1">Price (USD)</label>
+                    <label className="text-sm font-bold text-slate-900 dark:text-slate-500 ml-1">Price (USD)</label>
                     <input type="number" value={form.price} disabled={form.category === "Pets"} onChange={(e) => handleEditField("price", e.target.value)} className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white font-bold disabled:opacity-50" />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-500 ml-1">Location</label>
+                    <label className="text-sm font-bold text-slate-900 dark:text-slate-500 ml-1">Location</label>
                     <input value={form.location} onChange={(e) => handleEditField("location", e.target.value)} className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white font-bold" />
                   </div>
                   <div className="space-y-2 md:col-span-2">
-                    <label className="text-sm font-bold text-slate-500 ml-1">Image URL</label>
+                    <label className="text-sm font-bold text-slate-900 dark:text-slate-500 ml-1">Image URL</label>
                     <input value={form.image} onChange={(e) => handleEditField("image", e.target.value)} className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white font-bold" />
                   </div>
                   <div className="space-y-2 md:col-span-2">
-                    <label className="text-sm font-bold text-slate-500 ml-1">Description</label>
+                    <label className="text-sm font-bold text-slate-900 dark:text-slate-500 ml-1">Description</label>
                     <textarea rows={4} value={form.description} onChange={(e) => handleEditField("description", e.target.value)} className="w-full px-6 py-4 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-[2rem] outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 dark:text-white" />
                   </div>
                 </div>
@@ -349,7 +349,7 @@ export default function MyListings() {
                 <AlertCircle size={48} />
               </div>
               <h3 className="text-3xl font-display font-bold text-slate-950 dark:text-white mb-4">Permanent Action</h3>
-              <p className="text-slate-500 dark:text-slate-400 mb-10 text-lg leading-relaxed">
+              <p className="text-slate-800 dark:text-slate-400 mb-10 text-lg leading-relaxed font-medium">
                 Confirm removal of <span className="font-bold text-red-500">"{selectedListing?.name}"</span>? This data will be purged from our servers.
               </p>
               <div className="flex gap-4">

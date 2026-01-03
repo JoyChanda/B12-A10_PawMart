@@ -93,7 +93,7 @@ export default function AddListing() {
         <h1 className="text-4xl sm:text-5xl font-display font-bold text-slate-900 dark:text-white">
           Add a New Listing
         </h1>
-        <p className="text-slate-500 dark:text-slate-400 text-lg max-w-2xl">
+        <p className="text-slate-800 dark:text-slate-400 text-lg max-w-2xl font-medium">
           Join our community of caregivers. Share details about the pet or supply item you'd like to list.
         </p>
       </Motion.div>
@@ -112,13 +112,13 @@ export default function AddListing() {
            </div>
            <div>
              <p className="font-bold text-slate-900 dark:text-white text-lg">Premium Service</p>
-             <p className="text-sm text-slate-500 dark:text-slate-400">All listings go through our automated safety check.</p>
+              <p className="text-sm text-slate-700 dark:text-slate-400 font-medium">All listings go through our automated safety check.</p>
            </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="space-y-2">
-            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Listing Name</label>
+            <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">Listing Name</label>
             <div className="relative group">
               <Tag className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={20} />
               <input
@@ -131,7 +131,7 @@ export default function AddListing() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Category</label>
+            <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">Category</label>
             <div className="relative group">
               <Layers className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors pointer-events-none" size={20} />
               <select
@@ -148,7 +148,7 @@ export default function AddListing() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Price (USD)</label>
+            <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">Price (USD)</label>
             <div className="relative group">
               <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={20} />
               <input
@@ -164,7 +164,7 @@ export default function AddListing() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Quantity</label>
+            <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">Quantity</label>
             <div className="relative group">
               <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-[10px] uppercase">Qty</div>
               <input
@@ -178,7 +178,7 @@ export default function AddListing() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Location</label>
+            <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">Location</label>
             <div className="relative group">
               <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={20} />
               <input
@@ -191,7 +191,7 @@ export default function AddListing() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Date</label>
+            <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">Date</label>
             <div className="relative group">
               <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={20} />
               <input
@@ -205,7 +205,7 @@ export default function AddListing() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Image URL</label>
+          <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">Image URL</label>
           <div className="relative group">
             <ImageIcon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={20} />
             <input
@@ -218,7 +218,7 @@ export default function AddListing() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Description</label>
+          <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">Description</label>
           <div className="relative group">
             <FileText className="absolute left-4 top-6 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={20} />
             <textarea

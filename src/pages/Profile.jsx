@@ -62,7 +62,7 @@ export default function Profile() {
           <h1 className="text-3xl sm:text-4xl font-display font-bold text-slate-950 dark:text-white mb-2">
             Profile Settings
           </h1>
-          <p className="text-slate-600 dark:text-slate-400">
+          <p className="text-slate-800 dark:text-slate-400 font-medium">
             Manage your account information and preferences
           </p>
         </div>
@@ -106,7 +106,7 @@ export default function Profile() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Display Name */}
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">
+              <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">
                 Display Name
               </label>
               <div className="relative group">
@@ -129,7 +129,7 @@ export default function Profile() {
 
             {/* Email (Read-only) */}
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">
+              <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">
                 Email Address
               </label>
               <div className="relative group">
@@ -148,7 +148,7 @@ export default function Profile() {
 
             {/* Photo URL */}
             <div className="space-y-2">
-              <label className="text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">
+              <label className="text-sm font-bold text-slate-900 dark:text-slate-300 ml-1">
                 Photo URL
               </label>
               <div className="relative group">
@@ -173,7 +173,7 @@ export default function Profile() {
             {/* Account Info (Read-only) */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6 border-t border-slate-200 dark:border-slate-700">
               <div>
-                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 block mb-2">
+                <label className="text-sm font-bold text-slate-900 dark:text-slate-300 block mb-2">
                   Account Created
                 </label>
                 <p className="text-slate-950 dark:text-white font-semibold">
@@ -188,7 +188,7 @@ export default function Profile() {
                 </p>
               </div>
               <div>
-                <label className="text-sm font-bold text-slate-700 dark:text-slate-300 block mb-2">
+                <label className="text-sm font-bold text-slate-900 dark:text-slate-300 block mb-2">
                   Last Sign In
                 </label>
                 <p className="text-slate-950 dark:text-white font-semibold">

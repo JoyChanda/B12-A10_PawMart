@@ -143,7 +143,7 @@ export default function DashboardHome() {
         <h1 className="text-3xl sm:text-4xl font-display font-bold text-slate-950 dark:text-white mb-2">
           Welcome back, {user?.displayName}! 👋
         </h1>
-        <p className="text-slate-600 dark:text-slate-400">
+        <p className="text-slate-800 dark:text-slate-400 font-medium">
           Here's what's happening with your PawMart account today.
         </p>
       </div>
@@ -163,7 +163,7 @@ export default function DashboardHome() {
                 <stat.icon size={24} />
               </div>
             </div>
-            <h3 className="text-sm font-semibold text-slate-600 dark:text-slate-400 mb-1">{stat.title}</h3>
+            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-400 mb-1">{stat.title}</h3>
             <p className="text-3xl font-display font-bold text-slate-950 dark:text-white mb-2">{stat.value}</p>
             <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">{stat.change}</p>
           </Motion.div>
@@ -340,7 +340,7 @@ export default function DashboardHome() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="4" className="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
+                    <td colSpan="4" className="px-6 py-8 text-center text-slate-700 dark:text-slate-400 font-medium">
                       No listings yet. <Link to="/dashboard/add-listing" className="text-primary-600 font-bold hover:underline">Create one now</Link>
                     </td>
                   </tr>
@@ -391,7 +391,7 @@ export default function DashboardHome() {
                       <td className="px-6 py-4 font-semibold text-slate-950 dark:text-white">
                         {order.petName}
                       </td>
-                      <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">
+                      <td className="px-6 py-4 text-sm text-slate-800 dark:text-slate-400 font-medium">
                         {order.name}
                       </td>
                       <td className="px-6 py-4 font-bold text-slate-950 dark:text-white">
@@ -406,7 +406,7 @@ export default function DashboardHome() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="4" className="px-6 py-8 text-center text-slate-500 dark:text-slate-400">
+                    <td colSpan="4" className="px-6 py-8 text-center text-slate-700 dark:text-slate-400 font-medium">
                       No orders yet
                     </td>
                   </tr>

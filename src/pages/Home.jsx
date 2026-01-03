@@ -3,7 +3,8 @@ import API from "../services/api";
 import ListingCard from "../components/ListingCard";
 import CategoryCard from "../components/CategoryCard";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion as Motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, Sparkles, Heart, ShieldCheck, Zap } from "lucide-react";
 
 export default function Home() {
   const [listings, setListings] = useState([]);
@@ -11,44 +12,40 @@ export default function Home() {
 
   const slides = [
     {
-      img: "https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=1080&auto=format&fit=crop",
-      tagline: "Find Your Furry Friend Today! 🐾",
-      subtagline: "Adopt, don’t shop — give a pet a loving home.",
+      img: "https://images.unsplash.com/photo-1517849845537-4d257902454a?q=80&w=1200&auto=format&fit=crop",
+      tagline: "Find Your Furry Friend Today!",
+      subtagline: "Adopt, don’t shop — give a pet a loving home and change a life forever.",
     },
     {
-      img: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1738",
-      tagline: "Because Every Pet Deserves Love and Care.",
-      subtagline: "Explore our listings and bring happiness home.",
+      img: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop",
+      tagline: "Premium Care for Every Pet",
+      subtagline: "Explore our curated listings of high-quality supplies and accessories.",
     },
     {
-      img: "https://images.unsplash.com/photo-1551779891-b83901e1f8b3?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1170",
-      tagline: "Happy Pets, Happy Owners! 🐕",
-      subtagline: "Find your perfect companion today.",
+      img: "https://images.unsplash.com/photo-1551779891-b83901e1f8b3?q=80&w=1200&auto=format&fit=crop",
+      tagline: "Happy Pets, Happy Life",
+      subtagline: "Join our community of pet lovers and find the perfect companion.",
     },
   ];
 
   useEffect(() => {
-    document.title = "PawMart - Home";
+    document.title = "PawMart | Premium Pet Adoption & Supplies";
     (async () => {
       try {
         const res = await API.get("/listings", { params: { limit: 6 } });
         setListings(res.data);
       } catch (err) {
-        // Only log if it's not a network/connection error
-        if (err.code !== "ERR_NETWORK" && err.code !== "ECONNREFUSED") {
-          console.error("Error fetching listings:", err);
-        }
-        // Silently handle connection errors (backend not running)
         setListings([]);
       }
     })();
+  }, []);
 
-    // Auto slide every 5 seconds
+  useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(interval);
-  }, []);
+  }, [slides.length]);
 
   const categories = [
     { name: "Pets", emoji: "🐶" },
@@ -58,191 +55,241 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
-      <div className="max-w-6xl mx-auto px-3 sm:px-4 py-6 sm:py-10 space-y-10 sm:space-y-16">
-        {/* 🐾 Banner Section */}
-        <section className="relative h-[400px] sm:h-[450px] md:h-[500px] overflow-hidden rounded-2xl sm:rounded-3xl shadow-md border border-orange-100 dark:border-gray-700">
-          <AnimatePresence mode="wait">
-            {slides.map((slide, index) =>
-              index === currentSlide ? (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -50 }}
-                  transition={{ duration: 0.8 }}
-                  className="absolute inset-0 flex flex-col md:flex-row items-stretch"
-                >
-                  {/* 🧡 Left side text & buttons */}
-                  <div className="z-10 w-full md:w-1/2 px-5 sm:px-7 md:px-12 py-6 sm:py-8 md:py-0 flex flex-col justify-center gap-3 sm:gap-4 text-orange-700 dark:text-orange-400 bg-white/80 dark:bg-gray-800/70 md:bg-transparent rounded-3xl md:rounded-none backdrop-blur-sm md:backdrop-blur-0">
-                    <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold leading-tight drop-shadow-sm dark:text-orange-300">
-                      {slide.tagline}
-                    </h1>
-                    <p className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 drop-shadow-sm max-w-xl">
-                      {slide.subtagline}
-                    </p>
-                    <div className="pt-1 sm:pt-2 flex flex-col sm:flex-row gap-3 sm:gap-4 items-center sm:items-start">
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="w-auto"
-                      >
-                        <Link
-                          to="/pets-supplies"
-                          className="flex items-center justify-center px-4 sm:px-6 py-2 sm:py-3 bg-orange-500 dark:bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-600 dark:hover:bg-orange-700 shadow-md transition-all duration-200 text-sm sm:text-base"
-                        >
-                          Browse Listings
-                        </Link>
-                      </motion.div>
-                      <motion.div
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="w-auto"
-                      >
-                        <Link
-                          to="/add-listing"
-                          className="flex items-center justify-center px-4 sm:px-6 py-2 sm:py-3 border-2 border-orange-500 dark:border-orange-400 text-orange-600 dark:text-orange-400 rounded-lg font-semibold hover:bg-orange-500 dark:hover:bg-orange-600 hover:text-white shadow-md transition-all duration-200 text-sm sm:text-base"
-                        >
-                          Add Listing
-                        </Link>
-                      </motion.div>
-                    </div>
-                  </div>
+    <div className="bg-slate-50 dark:bg-slate-900 transition-colors duration-500 overflow-hidden">
+      {/* Hero Section */}
+      <section className="relative min-h-[85vh] flex items-center pt-20 pb-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <Motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative z-10 space-y-8"
+          >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-bold text-sm border border-primary-100 dark:border-primary-800 animate-fade-in">
+              <Sparkles size={16} />
+              <span>Pet Services Platform</span>
+            </div>
+            
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-display font-bold text-slate-900 dark:text-white leading-[1.1] tracking-tight">
+              Where Pets Find <span className="text-primary-500">Perfect</span> Homes.
+            </h1>
+            
+            <p className="text-lg sm:text-xl text-slate-500 dark:text-slate-400 leading-relaxed max-w-xl">
+              PawMart is the leading community for pet adoption and premium supplies. 
+              We bridge the gap between pet lovers and their future companions.
+            </p>
 
-                  {/* 🐕 Right side image */}
-                  <img
-                    src={slide.img}
-                    alt={slide.tagline}
-                    className="w-full md:w-1/2 h-64 sm:h-72 md:h-full object-cover rounded-3xl md:rounded-none"
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                to="/pets-supplies"
+                className="btn-premium flex items-center gap-2 text-lg px-8 py-4"
+              >
+                Explore Marketplace
+                <ArrowRight size={20} />
+              </Link>
+              <Link
+                to="/add-listing"
+                className="inline-flex items-center justify-center px-8 py-4 rounded-xl border-2 border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-300"
+              >
+                List a Pet/Item
+              </Link>
+            </div>
+
+            <div className="flex items-center gap-6 pt-4">
+              <div className="flex -space-x-3">
+                {[1, 2, 3, 4].map(i => (
+                  <img 
+                    key={i}
+                    src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${i}`} 
+                    className="w-10 h-10 rounded-full border-2 border-white dark:border-slate-900"
+                    alt=""
                   />
-                </motion.div>
-              ) : null
-            )}
-          </AnimatePresence>
+                ))}
+              </div>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                <span className="font-bold text-slate-900 dark:text-white">2k+</span> Pet Lovers Joined
+              </p>
+            </div>
+          </Motion.div>
 
-          {/* ⚪ Dot indicators */}
-          <div className="absolute bottom-4 w-full flex justify-center gap-3 z-20">
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentSlide(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                  index === currentSlide
-                    ? "bg-orange-500 dark:bg-orange-400 scale-110"
-                    : "bg-white/70 dark:bg-gray-600/70"
-                }`}
-              />
-            ))}
+          <Motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1 }}
+            className="relative"
+          >
+            <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-2xl shadow-primary-500/20 border-8 border-white dark:border-slate-800">
+              <AnimatePresence mode="wait">
+                <Motion.img
+                  key={currentSlide}
+                  src={slides[currentSlide].img}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.8 }}
+                  className="w-full aspect-[4/5] lg:aspect-square object-cover"
+                />
+              </AnimatePresence>
+            </div>
+            
+            {/* Floating Cards */}
+            <Motion.div 
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 4, repeat: Infinity }}
+              className="absolute -top-6 -right-6 z-20 glass-card p-4 rounded-2xl shadow-xl flex items-center gap-3"
+            >
+              <div className="w-10 h-10 bg-secondary-500 rounded-lg flex items-center justify-center text-white">
+                <Heart size={20} fill="currentColor" />
+              </div>
+              <div>
+                <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Health Checked</p>
+                <p className="font-bold text-slate-900 dark:text-white">Certified Pets</p>
+              </div>
+            </Motion.div>
+
+            <Motion.div 
+              animate={{ y: [0, 10, 0] }}
+              transition={{ duration: 5, repeat: Infinity, delay: 0.5 }}
+              className="absolute -bottom-6 -left-6 z-20 glass-card p-4 rounded-2xl shadow-xl flex items-center gap-3"
+            >
+              <div className="w-10 h-10 bg-accent-500 rounded-lg flex items-center justify-center text-white">
+                <Zap size={20} fill="currentColor" />
+              </div>
+              <div>
+                <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Fast Response</p>
+                <p className="font-bold text-slate-900 dark:text-white">Verified Sellers</p>
+              </div>
+            </Motion.div>
+          </Motion.div>
+        </div>
+      </section>
+
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32 py-20">
+        {/* Categories Section */}
+        <section className="space-y-12">
+          <div className="text-center space-y-4">
+            <h2 className="text-4xl font-display font-bold text-slate-900 dark:text-white">Browse Categories</h2>
+            <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
+              Find exactly what your pet needs with our curated categories.
+            </p>
           </div>
-        </section>
-
-        {/* 🧩 Category Section */}
-        <section>
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4 sm:mb-6 text-center px-2">
-            Browse by Category
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {categories.map((c) => (
               <CategoryCard key={c.name} category={c} />
             ))}
           </div>
         </section>
 
-        {/* 🐕 Recent Listings */}
-        <section>
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4 sm:mb-6 text-center px-2">
-            Recent Listings
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        {/* Featured Listings */}
+        <section className="space-y-12">
+          <div className="flex flex-col sm:flex-row items-end justify-between gap-6">
+            <div className="space-y-4 text-center sm:text-left">
+              <h2 className="text-4xl font-display font-bold text-slate-900 dark:text-white">Recent Listings</h2>
+              <p className="text-slate-500 dark:text-slate-400 max-w-xl">
+                The latest furry friends and pet supplies added to our marketplace.
+              </p>
+            </div>
+            <Link to="/pets-supplies" className="group flex items-center gap-2 font-bold text-primary-500 hover:text-primary-600 transition-colors">
+              Explore All <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {listings.length > 0 ? (
               listings.map((l) => <ListingCard key={l._id} item={l} />)
             ) : (
-              <p className="text-center text-gray-500 dark:text-gray-400 col-span-full">
-                No listings found yet.
-              </p>
+              <div className="col-span-full py-20 text-center glass-card rounded-3xl">
+                <p className="text-slate-500 dark:text-slate-400 text-lg">No listings found yet. Check back soon!</p>
+              </div>
             )}
           </div>
         </section>
 
-        {/* ❤️ Extra Sections */}
-        <section className="space-y-6 sm:space-y-8">
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow border border-orange-50 dark:border-gray-700 text-center">
-            <h3 className="text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-gray-100 mx-auto max-w-2xl">
-              Why Adopt from PawMart?
-            </h3>
-            <p className="mt-4 text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto">
-              Adopting saves lives, reduces overpopulation, and gives animals a
-              chance for a loving home. Together, we can make the world kinder
-              for our furry friends.
+        {/* Why Us Section */}
+        <section className="relative rounded-[3rem] overflow-hidden bg-primary-600 px-8 py-20 text-center text-white">
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
+          <div className="relative z-10 max-w-3xl mx-auto space-y-10">
+            <div className="inline-block p-4 bg-white/10 backdrop-blur-md rounded-2xl border border-white/20">
+              <ShieldCheck size={40} />
+            </div>
+            <h2 className="text-4xl sm:text-5xl font-display font-bold">Why Choose PawMart?</h2>
+            <p className="text-xl text-primary-100 opacity-90 leading-relaxed">
+              We provide a safe, secure, and transparent environment for pet adoption 
+              and care. Our mission is to ensure every pet finds a loving, lifelong home.
             </p>
-          </div>
-
-          <motion.div
-            whileHover={{ scale: 1.01 }}
-            className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow border border-orange-50 dark:border-gray-700"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 sm:gap-6">
-              <div>
-                <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
-                  Meet Our Pet Heroes
-                </h3>
-                <p className="mt-2 text-gray-600 dark:text-gray-300 text-sm leading-relaxed max-w-xl">
-                  Stories from the compassionate adopters and caregivers who
-                  make PawMart&apos;s mission possible.
-                </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-8 border-t border-white/20">
+              <div className="space-y-2">
+                <p className="text-3xl font-bold">100%</p>
+                <p className="text-sm text-primary-100 uppercase tracking-widest font-bold">Verified Leads</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-3xl font-bold">24/7</p>
+                <p className="text-sm text-primary-100 uppercase tracking-widest font-bold">Expert Support</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-3xl font-bold">Free</p>
+                <p className="text-sm text-primary-100 uppercase tracking-widest font-bold">Pet Consultations</p>
               </div>
             </div>
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-              {[
-                {
-                  name: "Amin",
-                  role: "Foster Caregiver",
-                  img: "https://randomuser.me/api/portraits/men/75.jpg",
-                  story: "Helps senior dogs find loving homes.",
-                },
-                {
-                  name: "Rita",
-                  role: "Volunteer",
-                  img: "https://randomuser.me/api/portraits/women/44.jpg",
-                  story: "Hosts weekend adoption drives.",
-                },
-                {
-                  name: "Mateo",
-                  role: "Adopter",
-                  img: "https://randomuser.me/api/portraits/men/32.jpg",
-                  story: "Rescued two bonded kittens.",
-                },
-                {
-                  name: "Sana",
-                  role: "Pet Therapist",
-                  img: "https://randomuser.me/api/portraits/women/65.jpg",
-                  story: "Guides families through pet integration.",
-                },
-              ].map((hero, i) => (
-                <div
-                  key={i}
-                  className="p-4 bg-orange-50/50 dark:bg-gray-700 rounded-xl hover:bg-orange-100/70 dark:hover:bg-gray-600 transition flex flex-col items-center text-center"
-                >
-                  <img
-                    src={hero.img}
-                    alt={hero.name}
-                    className="w-24 h-24 object-cover rounded-full shadow-md"
-                  />
-                  <p className="mt-3 font-semibold text-gray-800 dark:text-gray-200">
-                    {hero.name}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {hero.role}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    {hero.story}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+          </div>
         </section>
-      </div>
+
+        {/* Testimonials/Pet Heroes */}
+        <section className="space-y-16">
+          <div className="text-center space-y-4">
+            <h2 className="text-4xl font-display font-bold text-slate-900 dark:text-white">Our Pet Heroes</h2>
+            <p className="text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
+              Real stories from real people who made a difference with PawMart.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                name: "Amin",
+                role: "Foster Caregiver",
+                img: "https://randomuser.me/api/portraits/men/75.jpg",
+                story: "Helps senior dogs find loving homes.",
+              },
+              {
+                name: "Rita",
+                role: "Volunteer",
+                img: "https://randomuser.me/api/portraits/women/44.jpg",
+                story: "Hosts weekend adoption drives.",
+              },
+              {
+                name: "Mateo",
+                role: "Adopter",
+                img: "https://randomuser.me/api/portraits/men/32.jpg",
+                story: "Rescued two bonded kittens.",
+              },
+              {
+                name: "Sana",
+                role: "Pet Therapist",
+                img: "https://randomuser.me/api/portraits/women/65.jpg",
+                story: "Guides families through pet therapy.",
+              },
+            ].map((hero, i) => (
+              <Motion.div
+                key={i}
+                whileHover={{ y: -10 }}
+                className="card-premium p-6 text-center space-y-4 bg-white dark:bg-slate-800/50"
+              >
+                <img
+                  src={hero.img}
+                  alt={hero.name}
+                  className="w-24 h-24 object-cover rounded-full mx-auto border-4 border-primary-500 shadow-xl"
+                />
+                <div>
+                  <h4 className="font-bold text-slate-900 dark:text-white text-lg">{hero.name}</h4>
+                  <p className="text-primary-500 text-sm font-semibold">{hero.role}</p>
+                </div>
+                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed italic">
+                  &ldquo;{hero.story}&rdquo;
+                </p>
+              </Motion.div>
+            ))}
+          </div>
+        </section>
+      </main>
     </div>
   );
 }

@@ -3,9 +3,11 @@ import { motion as Motion, AnimatePresence } from "framer-motion";
 import useAuth from "../hooks/useAuth";
 import API from "../services/api";
 import toast from "react-hot-toast";
+import { X, User, Mail, MapPin, Phone, Calendar, FileText, CreditCard, ShoppingCart, Loader2, Sparkles } from "lucide-react";
 
 export default function OrderModal({ item, isOpen, onClose, onSuccess }) {
   const { user } = useAuth();
+  const [submitting, setSubmitting] = useState(false);
   const [order, setOrder] = useState({
     buyerName: "",
     email: "",
@@ -38,44 +40,21 @@ export default function OrderModal({ item, isOpen, onClose, onSuccess }) {
       email: user?.email || prev.email || "",
       quantity: item.category === "Pets" ? 1 : prev.quantity || 1,
     }));
-  }, [isOpen, item?.category, user?.displayName, user?.email]);
+  }, [isOpen, item, user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!item?._id) {
-      toast.error("Listing information is unavailable. Please try again.");
-      return;
-    }
-    if (!user?.email) {
-      toast.error("Please sign in before placing an order.");
+    if (!item?._id || !user?.email) {
+      toast.error("Process aborted. Missing critical data.");
       return;
     }
 
-    if (
-      item.category !== "Pets" &&
-      (!order.quantity || Number(order.quantity) <= 0)
-    ) {
-      toast.error("Please enter a valid quantity.");
+    if (!order.buyerName.trim() || !order.address.trim() || !order.phone.trim()) {
+      toast.error("Please fill in all identity and contact fields.");
       return;
     }
 
-    if (!order.buyerName || !order.buyerName.trim()) {
-      toast.error("Please enter your name.");
-      return;
-    }
-
-    if (!order.email || !order.email.trim()) {
-      toast.error("Please enter your email.");
-      return;
-    }
-
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(order.email)) {
-      toast.error("Please enter a valid email address.");
-      return;
-    }
-
+    setSubmitting(true);
     const payload = {
       productId: item._id,
       productName: item.name,
@@ -91,140 +70,199 @@ export default function OrderModal({ item, isOpen, onClose, onSuccess }) {
 
     try {
       await API.post("/orders", payload);
-      toast.success("Order placed successfully! 🎉");
-      onSuccess();
+      toast.success("Order secured! Check your dashboard. 🚀");
+      onSuccess?.();
       onClose();
-      setOrder({
-        buyerName: user?.displayName || "",
-        email: user?.email || "",
-        address: "",
-        phone: "",
-        date: "",
-        notes: "",
-        quantity: 1,
-      });
     } catch (err) {
-      toast.error(err?.response?.data?.error || "Failed to place order.");
+      toast.error(err?.response?.data?.error || "Transaction declined.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <AnimatePresence>
       {isOpen && item && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-40 dark:bg-opacity-60 flex items-center justify-center z-50 p-4"
-          onClick={onClose}
-        >
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <Motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            onClick={(e) => e.stopPropagation()}
-            className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg w-full max-w-md shadow-2xl mx-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
+          />
+          
+          <Motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 30 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 30 }}
+            className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[3rem] shadow-2xl overflow-hidden"
           >
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-semibold text-xl text-gray-800 dark:text-gray-100">
-                Order: {item.name}
-              </h3>
-              <button
-                onClick={onClose}
-                className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 text-2xl"
-              >
-                ×
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input
-                  value={order.buyerName}
-                  onChange={(e) =>
-                    setOrder({ ...order, buyerName: e.target.value })
-                  }
-                  required
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400"
-                  placeholder="Your Name *"
-                />
-                <input
-                  type="email"
-                  value={order.email}
-                  onChange={(e) =>
-                    setOrder({ ...order, email: e.target.value })
-                  }
-                  required
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400"
-                  placeholder="Your Email *"
-                />
-                <input
-                  value={item.category === "Pets" ? 1 : order.quantity}
-                  onChange={(e) =>
-                    setOrder({ ...order, quantity: e.target.value })
-                  }
-                  type="number"
-                  min={1}
-                  disabled={item.category === "Pets"}
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400 disabled:bg-gray-100 dark:disabled:bg-gray-800"
-                  placeholder="Quantity"
-                />
-                <input
-                  value={
-                    item.price === 0 ? "Free for Adoption" : `$${item.price}`
-                  }
-                  readOnly
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-                />
-              </div>
-              <input
-                value={order.address}
-                onChange={(e) =>
-                  setOrder({ ...order, address: e.target.value })
-                }
-                placeholder="Address *"
-                required
-                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400"
-              />
-              <input
-                value={order.phone}
-                onChange={(e) => setOrder({ ...order, phone: e.target.value })}
-                placeholder="Phone *"
-                required
-                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400"
-              />
-              <input
-                type="date"
-                value={order.date}
-                onChange={(e) => setOrder({ ...order, date: e.target.value })}
-                required
-                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-              />
-              <textarea
-                value={order.notes}
-                onChange={(e) => setOrder({ ...order, notes: e.target.value })}
-                placeholder="Additional Notes (optional)"
-                rows="3"
-                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400"
-              />
-              <div className="flex justify-end gap-2 mt-4">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  Cancel
+            {/* Modal Header Decor */}
+            <div className="h-2 bg-gradient-to-r from-primary-500 via-emerald-500 to-amber-500"></div>
+            
+            <div className="p-8 sm:p-12">
+              <div className="flex justify-between items-start mb-10">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-primary-500 font-bold text-sm uppercase tracking-widest">
+                    <ShoppingCart size={16} />
+                    <span>Secure Checkout</span>
+                  </div>
+                  <h3 className="text-3xl font-display font-bold text-slate-900 dark:text-white">
+                    {item.name}
+                  </h3>
+                </div>
+                <button onClick={onClose} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-400">
+                  <X size={28} />
                 </button>
-                <Motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-4 py-2 bg-primary dark:bg-orange-600 text-white rounded hover:bg-orange-600 dark:hover:bg-orange-700"
-                >
-                  Place Order
-                </Motion.button>
               </div>
-            </form>
+
+              <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Summary Card */}
+                <div className="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-700/50 flex items-center justify-between">
+                   <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-md">
+                         <img src={item.image} alt="" className="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                         <p className="font-bold text-slate-900 dark:text-white">{item.category}</p>
+                         <p className="text-sm text-slate-500">Processing with PawMart Security</p>
+                      </div>
+                   </div>
+                   <div className="text-right">
+                      <p className="text-2xl font-display font-bold text-primary-500">
+                         {item.price === 0 ? "FREE" : `$${item.price}`}
+                      </p>
+                      <p className="text-xs font-bold text-slate-400 uppercase">Unit Price</p>
+                   </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* Name */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-600 dark:text-slate-400 ml-1">Full Name</label>
+                    <div className="relative group">
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={18} />
+                      <input
+                        value={order.buyerName}
+                        onChange={(e) => setOrder({ ...order, buyerName: e.target.value })}
+                        required
+                        className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all dark:text-white"
+                        placeholder="John Doe"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Email */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-600 dark:text-slate-400 ml-1">Email Address</label>
+                    <div className="relative group">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={18} />
+                      <input
+                        type="email"
+                        value={order.email}
+                        readOnly
+                        className="w-full pl-12 pr-4 py-3.5 bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none text-slate-500 cursor-not-allowed"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Quantity */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-600 dark:text-slate-400 ml-1">Desired Quantity</label>
+                    <div className="relative group">
+                      <Sparkles className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={18} />
+                      <input
+                        type="number"
+                        min={1}
+                        max={item.quantity || 1}
+                        value={order.quantity}
+                        disabled={item.category === "Pets"}
+                        onChange={(e) => setOrder({ ...order, quantity: e.target.value })}
+                        className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all dark:text-white disabled:opacity-50"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Phone */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-600 dark:text-slate-400 ml-1">Contact Phone</label>
+                    <div className="relative group">
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={18} />
+                      <input
+                        value={order.phone}
+                        onChange={(e) => setOrder({ ...order, phone: e.target.value })}
+                        required
+                        className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all dark:text-white"
+                        placeholder="+1 234 567 890"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Address */}
+                  <div className="space-y-2 md:col-span-2">
+                    <label className="text-sm font-bold text-slate-600 dark:text-slate-400 ml-1">Shipping / Pickup Address</label>
+                    <div className="relative group">
+                      <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={18} />
+                      <input
+                        value={order.address}
+                        onChange={(e) => setOrder({ ...order, address: e.target.value })}
+                        required
+                        className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all dark:text-white"
+                        placeholder="123 Street Name, City, Country"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Submission Date */}
+                  <div className="space-y-2 md:col-span-2">
+                    <label className="text-sm font-bold text-slate-600 dark:text-slate-400 ml-1">Preferred Collection Date</label>
+                    <div className="relative group">
+                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-500 transition-colors" size={18} />
+                      <input
+                        type="date"
+                        value={order.date}
+                        onChange={(e) => setOrder({ ...order, date: e.target.value })}
+                        required
+                        className="w-full pl-12 pr-4 py-3.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all dark:text-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer Actions */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="flex-1 px-8 py-4 border-2 border-slate-200 dark:border-slate-700 rounded-2xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+                  >
+                    Discard Charge
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="flex-1 btn-premium py-4 text-lg disabled:opacity-70"
+                  >
+                    {submitting ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <Loader2 className="animate-spin" size={20} />
+                        <span>Verifying...</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center gap-2">
+                        <CreditCard size={20} />
+                        <span>Confirm Order</span>
+                      </div>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
           </Motion.div>
         </div>
       )}
     </AnimatePresence>
   );
 }
+

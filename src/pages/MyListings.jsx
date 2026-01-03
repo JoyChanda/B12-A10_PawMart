@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import API from "../services/api";
 import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
 import { AnimatePresence, motion as Motion } from "framer-motion";
+import { Plus, Edit3, Trash2, Eye, Calendar, MapPin, Tag, DollarSign, Loader2, PackageOpen, AlertCircle, X } from "lucide-react";
 
 const categories = ["Pets", "Pet Food", "Accessories", "Care Products"];
 
@@ -17,6 +18,7 @@ export default function MyListings() {
   const [selectedListing, setSelectedListing] = useState(null);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+
   const resetForm = useMemo(
     () => ({
       name: "",
@@ -32,41 +34,32 @@ export default function MyListings() {
   const [form, setForm] = useState(resetForm);
 
   useEffect(() => {
-    document.title = "PawMart - My Listings";
+    document.title = "PawMart | My Account";
   }, []);
 
   const extractListings = (payload) => {
     if (!payload) return [];
     if (Array.isArray(payload?.data)) return payload.data;
     if (Array.isArray(payload)) return payload;
-    if (Array.isArray(payload?.items)) return payload.items;
     return [];
   };
 
   const toListing = (payload) => {
     if (!payload) return null;
     if (payload.data && !Array.isArray(payload.data)) return payload.data;
-    if (payload.item) return payload.item;
     return payload;
   };
 
   const fetchListings = async () => {
     if (!user?.email) return;
     setIsLoading(true);
-    setSelectedListing(null);
     try {
       const res = await API.get("/listings", {
         params: { email: user.email },
       });
       setListings(extractListings(res.data));
     } catch (err) {
-      if (err.code !== "ERR_NETWORK" && err.code !== "ECONNREFUSED") {
-        console.error("Error fetching listings:", err);
-      }
-      toast.error(
-        err?.response?.data?.error ||
-          "Unable to load your listings right now. Please try again shortly."
-      );
+      toast.error(err?.response?.data?.error || "Failed to load listings.");
       setListings([]);
     } finally {
       setIsLoading(false);
@@ -83,10 +76,7 @@ export default function MyListings() {
     setForm({
       name: normalizedListing?.name || "",
       category: normalizedListing?.category || "Pets",
-      price:
-        normalizedListing?.category === "Pets"
-          ? 0
-          : normalizedListing?.price ?? 0,
+      price: normalizedListing?.category === "Pets" ? 0 : normalizedListing?.price ?? 0,
       location: normalizedListing?.location || "",
       description: normalizedListing?.description || "",
       image: normalizedListing?.image || "",
@@ -98,47 +88,21 @@ export default function MyListings() {
   const handleEditField = (field, value) => {
     setForm((prev) => {
       const updated = { ...prev, [field]: value };
-      if (field === "category" && value === "Pets") {
-        updated.price = 0;
-      }
+      if (field === "category" && value === "Pets") updated.price = 0;
       return updated;
     });
   };
 
   const validateForm = () => {
-    const requiredFields = [
-      "name",
-      "category",
-      "location",
-      "description",
-      "image",
-    ];
-    const missingField = requiredFields.find((field) => {
-      const value = form[field];
-      return !value || (typeof value === "string" && value.trim() === "");
-    });
-
-    if (missingField) {
-      toast.error("Please complete all fields before saving.");
+    if (!form.name || !form.location || !form.description || !form.image) {
+      toast.error("Please fill in all required fields.");
       return false;
     }
-
-    const price = Number(form.price);
-    if (form.category === "Pets" && price !== 0) {
-      toast.error("Adoption listings must have a price of 0.");
-      return false;
-    }
-    if (form.category !== "Pets" && price <= 0) {
-      toast.error("Price must be greater than zero for this category.");
-      return false;
-    }
-
     return true;
   };
 
   const handleUpdate = async () => {
-    if (!selectedListing?._id) return;
-    if (!validateForm()) return;
+    if (!selectedListing?._id || !validateForm()) return;
 
     setSubmitLoading(true);
     try {
@@ -146,35 +110,17 @@ export default function MyListings() {
         ...form,
         price: form.category === "Pets" ? 0 : Number(form.price || 0),
       };
-      const updated = await API.patch(
-        `/listings/${selectedListing._id}`,
-        payload
-      );
+      const updated = await API.patch(`/listings/${selectedListing._id}`, payload);
       const updatedListing = toListing(updated?.data ?? updated);
-      if (!updatedListing?._id) {
-        throw new Error("Invalid response while updating listing.");
-      }
-      setListings((prev) =>
-        prev.map((item) =>
-          item._id === selectedListing._id
-            ? { ...item, ...updatedListing }
-            : item
-        )
-      );
-      toast.success("Listing updated successfully!");
+      
+      setListings((prev) => prev.map((item) => item._id === selectedListing._id ? { ...item, ...updatedListing } : item));
+      toast.success("Listing updated successfully! 🎉");
       setIsEditOpen(false);
-      setSelectedListing(null);
-      setForm({ ...resetForm });
     } catch (err) {
-      toast.error(err?.response?.data?.error || "Failed to update listing.");
+      toast.error("Update failed. Please check your data.");
     } finally {
       setSubmitLoading(false);
     }
-  };
-
-  const confirmDelete = (listing) => {
-    setSelectedListing(listing);
-    setIsDeleteOpen(true);
   };
 
   const handleDelete = async () => {
@@ -182,265 +128,200 @@ export default function MyListings() {
     setDeleteLoading(true);
     try {
       await API.delete(`/listings/${selectedListing._id}`);
-      setListings((prev) =>
-        prev.filter((item) => item._id !== selectedListing._id)
-      );
-      toast.success("Listing deleted.");
+      setListings((prev) => prev.filter((item) => item._id !== selectedListing._id));
+      toast.success("Listing removed from database.");
       setIsDeleteOpen(false);
-      setSelectedListing(null);
     } catch (err) {
-      toast.error(err?.response?.data?.error || "Failed to delete listing.");
+      toast.error("Deletion failed.");
     } finally {
       setDeleteLoading(false);
     }
   };
 
   return (
-    <div className="container mx-auto px-3 sm:px-4 py-6 sm:py-8 min-h-screen">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
-        <div>
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-100">
-            My Listings
-          </h2>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            Manage the pets and products you’ve shared with the PawMart
-            community.
-          </p>
+    <div className="bg-slate-50 dark:bg-slate-900 min-h-screen pt-24 pb-20 transition-colors duration-500">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+          <Motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="space-y-2"
+          >
+            <h1 className="text-4xl sm:text-5xl font-display font-bold text-slate-900 dark:text-white">
+              My Listings
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 text-lg max-w-xl">
+              Take full control of your published marketplace items. Edit, update, or remove them at any time.
+            </p>
+          </Motion.div>
+          <Motion.button
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            onClick={() => navigate("/add-listing")}
+            className="btn-premium px-8 py-4 flex items-center gap-2 group"
+          >
+            <Plus size={20} className="group-hover:rotate-90 transition-transform" />
+            Create New Item
+          </Motion.button>
         </div>
-        <button
-          onClick={() => navigate("/add-listing")}
-          className="w-full sm:w-auto px-4 py-2 bg-orange-500 dark:bg-orange-600 text-white rounded-lg hover:bg-orange-600 dark:hover:bg-orange-700 text-sm sm:text-base font-semibold"
-        >
-          + Add New Listing
-        </button>
-      </div>
 
-      <div className="mt-4 overflow-x-auto -mx-3 sm:mx-0">
-        <table className="w-full table-auto min-w-[800px]">
-          <thead className="text-left bg-gray-50/60 dark:bg-gray-800/70">
-            <tr className="border-b border-gray-300 dark:border-gray-700">
-              <th className="text-gray-800 dark:text-gray-200 py-3 px-4 font-semibold">
-                Image
-              </th>
-              <th className="text-gray-800 dark:text-gray-200 py-3 px-4 font-semibold">
-                Name
-              </th>
-              <th className="text-gray-800 dark:text-gray-200 py-3 px-4 font-semibold">
-                Category
-              </th>
-              <th className="text-gray-800 dark:text-gray-200 py-3 px-4 font-semibold">
-                Price
-              </th>
-              <th className="text-gray-800 dark:text-gray-200 py-3 px-4 font-semibold">
-                Location
-              </th>
-              <th className="text-gray-800 dark:text-gray-200 py-3 px-4 font-semibold">
-                Created At
-              </th>
-              <th className="text-gray-800 dark:text-gray-200 py-3 px-4 font-semibold text-right">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {isLoading ? (
-              <tr>
-                <td
-                  colSpan="7"
-                  className="py-6 text-center text-gray-500 dark:text-gray-400"
-                >
-                  Loading your listings...
-                </td>
-              </tr>
-            ) : listings.length === 0 ? (
-              <tr>
-                <td
-                  colSpan="7"
-                  className="py-6 text-center text-gray-500 dark:text-gray-400"
-                >
-                  You haven't added any listings yet.
-                </td>
-              </tr>
-            ) : (
-              listings.map((listing) => (
-                <tr
-                  key={listing._id}
-                  className="border-t border-gray-200 dark:border-gray-700 hover:bg-gray-50/80 dark:hover:bg-gray-800/60 transition"
-                >
-                  <td className="py-3 px-4">
-                    <img
-                      src={
-                        listing.image ||
-                        "https://via.placeholder.com/100x100?text=No+Image"
-                      }
-                      alt={listing.name}
-                      className="w-20 h-20 object-cover rounded-lg"
-                      onError={(e) => {
-                        e.target.src =
-                          "https://via.placeholder.com/100x100?text=No+Image";
-                      }}
-                    />
-                  </td>
-                  <td className="py-3 px-4 text-gray-800 dark:text-gray-100 font-medium">
-                    {listing.name}
-                  </td>
-                  <td className="py-3 px-4 text-gray-700 dark:text-gray-300">
-                    {listing.category}
-                  </td>
-                  <td className="py-3 px-4 text-gray-700 dark:text-gray-300">
-                    {listing.price === 0 ? "Free" : `$${listing.price}`}
-                  </td>
-                  <td className="py-3 px-4 text-gray-700 dark:text-gray-300">
-                    {listing.location || "—"}
-                  </td>
-                  <td className="py-3 px-4 text-gray-600 dark:text-gray-400 text-sm">
-                    {listing.createdAt
-                      ? new Date(listing.createdAt).toLocaleDateString()
-                      : "—"}
-                  </td>
-                  <td className="py-3 px-4 text-right space-x-3 whitespace-nowrap">
-                    <button
-                      onClick={() => navigate(`/listing/${listing._id}`)}
-                      className="text-sm font-semibold text-orange-600 dark:text-orange-400 hover:underline"
-                    >
-                      View
-                    </button>
-                    <button
-                      onClick={() => openEditModal(listing)}
-                      className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => confirmDelete(listing)}
-                      className="text-sm font-semibold text-red-500 dark:text-red-400 hover:underline"
-                    >
-                      Delete
-                    </button>
-                  </td>
+        {/* Listings Content */}
+        <div className="glass-card rounded-[2.5rem] overflow-hidden shadow-2xl shadow-primary-500/5">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-slate-100/50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
+                  <th className="px-8 py-6 text-xs font-bold uppercase tracking-widest text-slate-500">Preview</th>
+                  <th className="px-8 py-6 text-xs font-bold uppercase tracking-widest text-slate-500">Details</th>
+                  <th className="px-8 py-6 text-xs font-bold uppercase tracking-widest text-slate-500">Price</th>
+                  <th className="px-8 py-6 text-xs font-bold uppercase tracking-widest text-slate-500">Stats</th>
+                  <th className="px-8 py-6 text-xs font-bold uppercase tracking-widest text-slate-500 text-right">Actions</th>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                {isLoading ? (
+                  <tr>
+                    <td colSpan="5" className="py-32">
+                      <div className="flex flex-col items-center justify-center space-y-4">
+                        <Loader2 className="w-10 h-10 text-primary-500 animate-spin" />
+                        <p className="text-slate-400 font-bold animate-pulse">Syncing your data...</p>
+                      </div>
+                    </td>
+                  </tr>
+                ) : listings.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className="py-32">
+                      <div className="flex flex-col items-center justify-center space-y-6">
+                        <div className="p-6 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-400">
+                          <PackageOpen size={64} />
+                        </div>
+                        <div className="text-center">
+                          <h3 className="text-2xl font-bold text-slate-900 dark:text-white">No Listings Yet</h3>
+                          <p className="text-slate-500 mt-2">You haven't added anything to the marketplace.</p>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  listings.map((listing) => (
+                    <tr key={listing._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
+                      <td className="px-8 py-6">
+                        <div className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-slate-100 dark:border-slate-700 shadow-sm relative">
+                           <img src={listing.image} alt="" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                           <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-slate-900/0 transition-colors"></div>
+                        </div>
+                      </td>
+                      <td className="px-8 py-6">
+                        <div className="space-y-1">
+                          <p className="font-bold text-slate-900 dark:text-white text-lg">{listing.name}</p>
+                          <div className="flex items-center gap-3 text-xs text-slate-500 font-bold">
+                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-primary-50 dark:bg-primary-900/30 text-primary-500 rounded-md">
+                              <Tag size={12} />
+                              {listing.category}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <MapPin size={12} />
+                              {listing.location}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-8 py-6">
+                        <p className="text-lg font-bold text-slate-900 dark:text-white">
+                          {listing.price === 0 ? (
+                            <span className="text-emerald-500">FREE</span>
+                          ) : (
+                            `$${listing.price}`
+                          )}
+                        </p>
+                      </td>
+                      <td className="px-8 py-6">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400">
+                          <Calendar size={14} />
+                          {new Date(listing.createdAt).toLocaleDateString()}
+                        </div>
+                      </td>
+                      <td className="px-8 py-6">
+                        <div className="flex items-center justify-end gap-2">
+                           <Link to={`/listing/${listing._id}`} className="p-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:bg-primary-500 hover:text-white transition-all shadow-sm">
+                             <Eye size={20} />
+                           </Link>
+                           <button onClick={() => openEditModal(listing)} className="p-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:bg-primary-500 hover:text-white transition-all shadow-sm">
+                             <Edit3 size={20} />
+                           </button>
+                           <button onClick={() => { setSelectedListing(listing); setIsDeleteOpen(true); }} className="p-3 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm">
+                             <Trash2 size={20} />
+                           </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
       {/* Edit Modal */}
       <AnimatePresence>
         {isEditOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/70 px-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <Motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+              onClick={() => setIsEditOpen(false)}
+            />
             <Motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 40 }}
-              transition={{ duration: 0.25 }}
-              className="w-full max-w-2xl bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-orange-100 dark:border-gray-700 overflow-hidden"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[2.5rem] shadow-2xl overflow-hidden"
             >
-              <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-100">
-                  Edit Listing
-                </h3>
-                <button
-                  onClick={() => {
-                    setIsEditOpen(false);
-                    setSelectedListing(null);
-                    setForm({ ...resetForm });
-                  }}
-                  className="text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 text-2xl leading-none"
-                  aria-label="Close edit modal"
-                >
-                  ×
-                </button>
-              </div>
-
-              <div className="px-6 py-5 space-y-5">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Field
-                    label="Name"
-                    value={form.name}
-                    onChange={(e) => handleEditField("name", e.target.value)}
-                    placeholder="Listing name"
-                  />
-                  <Field
-                    label="Category"
-                    as="select"
-                    value={form.category}
-                    onChange={(e) =>
-                      handleEditField("category", e.target.value)
-                    }
-                  >
-                    {categories.map((cat) => (
-                      <option key={cat}>{cat}</option>
-                    ))}
-                  </Field>
-                  <Field
-                    label="Price"
-                    type="number"
-                    value={form.price}
-                    min={form.category === "Pets" ? 0 : 1}
-                    step="0.01"
-                    disabled={form.category === "Pets"}
-                    onChange={(e) => handleEditField("price", e.target.value)}
-                    placeholder={
-                      form.category === "Pets" ? "0 (Adoption)" : "e.g. 25.00"
-                    }
-                  />
-                  <Field
-                    label="Location"
-                    value={form.location}
-                    onChange={(e) =>
-                      handleEditField("location", e.target.value)
-                    }
-                    placeholder="City, Country"
-                  />
-                  <Field
-                    label="Available From"
-                    type="date"
-                    value={form.date}
-                    onChange={(e) => handleEditField("date", e.target.value)}
-                  />
-                  <Field
-                    label="Image URL"
-                    value={form.image}
-                    onChange={(e) => handleEditField("image", e.target.value)}
-                    placeholder="https://images..."
-                  />
+              <div className="p-8 sm:p-10">
+                <div className="flex items-center justify-between mb-8">
+                  <h3 className="text-2xl font-bold dark:text-white">Update Listing</h3>
+                  <button onClick={() => setIsEditOpen(false)} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-400">
+                    <X size={24} />
+                  </button>
                 </div>
 
-                <div>
-                  <Field
-                    label="Description"
-                    as="textarea"
-                    rows={4}
-                    value={form.description}
-                    onChange={(e) =>
-                      handleEditField("description", e.target.value)
-                    }
-                    placeholder="Describe this listing..."
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-500 ml-1">Title</label>
+                    <input value={form.name} onChange={(e) => handleEditField("name", e.target.value)} className="input-premium py-3" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-500 ml-1">Category</label>
+                    <select value={form.category} onChange={(e) => handleEditField("category", e.target.value)} className="input-premium py-3 font-bold">
+                      {categories.map((cat) => ( <option key={cat}>{cat}</option> ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-500 ml-1">Price ($)</label>
+                    <input type="number" value={form.price} disabled={form.category === "Pets"} onChange={(e) => handleEditField("price", e.target.value)} className="input-premium py-3 disabled:opacity-50" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-slate-500 ml-1">Location</label>
+                    <input value={form.location} onChange={(e) => handleEditField("location", e.target.value)} className="input-premium py-3" />
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <label className="text-sm font-bold text-slate-500 ml-1">Image URL</label>
+                    <input value={form.image} onChange={(e) => handleEditField("image", e.target.value)} className="input-premium py-3" />
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <label className="text-sm font-bold text-slate-500 ml-1">Description</label>
+                    <textarea rows={4} value={form.description} onChange={(e) => handleEditField("description", e.target.value)} className="input-premium py-3 rounded-2xl" />
+                  </div>
                 </div>
-              </div>
 
-              <div className="px-6 py-4 bg-gray-50/80 dark:bg-gray-800/80 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row justify-end gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsEditOpen(false);
-                    setSelectedListing(null);
-                    setForm({ ...resetForm });
-                  }}
-                  className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={handleUpdate}
-                  disabled={submitLoading}
-                  className="px-5 py-2 rounded-lg bg-orange-500 text-white font-semibold hover:bg-orange-600 transition disabled:opacity-70 disabled:cursor-not-allowed"
-                >
-                  {submitLoading ? "Saving..." : "Save Changes"}
-                </button>
+                <div className="flex gap-4 mt-10">
+                  <button onClick={() => setIsEditOpen(false)} className="flex-1 px-8 py-4 border-2 border-slate-200 dark:border-slate-800 rounded-2xl font-bold dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">Cancel</button>
+                  <button onClick={handleUpdate} disabled={submitLoading} className="flex-1 btn-premium py-4">
+                    {submitLoading ? <Loader2 className="animate-spin mx-auto" /> : "Sync Changes"}
+                  </button>
+                </div>
               </div>
             </Motion.div>
           </div>
@@ -450,37 +331,29 @@ export default function MyListings() {
       {/* Delete Confirmation */}
       <AnimatePresence>
         {isDeleteOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <Motion.div 
+               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+               className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+               onClick={() => setIsDeleteOpen(false)}
+            />
             <Motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.2 }}
-              className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-2xl border border-red-100 dark:border-red-500/30 p-6 space-y-4 text-center"
+              className="relative w-full max-w-md bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 sm:p-10 shadow-2xl text-center"
             >
-              <h4 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                Remove this listing?
-              </h4>
-              <p className="text-sm text-gray-600 dark:text-gray-300">
-                This action cannot be undone. Your listing will be removed from
-                the marketplace immediately.
+              <div className="w-20 h-20 bg-red-100 dark:bg-red-900/30 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <AlertCircle size={40} />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Permanent Action</h3>
+              <p className="text-slate-500 dark:text-slate-400 mb-8">
+                Are you sure you want to remove <span className="font-bold text-red-500">"{selectedListing?.name}"</span>? This cannot be undone.
               </p>
-              <div className="flex flex-col sm:flex-row justify-center gap-3 pt-2">
-                <button
-                  onClick={() => {
-                    setIsDeleteOpen(false);
-                    setSelectedListing(null);
-                  }}
-                  className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleDelete}
-                  disabled={deleteLoading}
-                  className="px-5 py-2 rounded-lg bg-red-500 text-white font-semibold hover:bg-red-600 transition disabled:opacity-70 disabled:cursor-not-allowed"
-                >
-                  {deleteLoading ? "Deleting..." : "Delete"}
+              <div className="flex gap-4">
+                <button onClick={() => setIsDeleteOpen(false)} className="flex-1 py-4 border-2 border-slate-200 dark:border-slate-700 rounded-2xl font-bold dark:text-white">Keep it</button>
+                <button onClick={handleDelete} disabled={deleteLoading} className="flex-1 py-4 bg-red-500 text-white rounded-2xl font-bold hover:bg-red-600 shadow-lg shadow-red-500/25">
+                  {deleteLoading ? <Loader2 className="animate-spin mx-auto" /> : "Delete"}
                 </button>
               </div>
             </Motion.div>
@@ -491,24 +364,3 @@ export default function MyListings() {
   );
 }
 
-const Field = ({
-  label,
-  as: Tag = "input",
-  className = "",
-  children,
-  ...props
-}) => (
-  <label className="flex flex-col gap-2">
-    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-      {label}
-    </span>
-    {React.createElement(
-      Tag,
-      {
-        className: `rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 py-2.5 text-gray-800 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-200 dark:focus:ring-orange-500/40 transition ${className}`,
-        ...props,
-      },
-      children
-    )}
-  </label>
-);

@@ -13,6 +13,7 @@ import MyListings from "./pages/MyListings";
 import MyOrders from "./pages/MyOrders";
 import NotFound404 from "./pages/NotFound404";
 import PrivateRoute from "./components/PrivateRoute";
+import ScrollToTop from "./components/ScrollToTop";
 import useAuth from "./hooks/useAuth";
 import { signOut } from "firebase/auth";
 import { auth } from "./firebase.config";
@@ -38,7 +39,8 @@ function AppContent() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-500 font-sans">
+      <ScrollToTop />
       <Navbar user={user} handleLogout={handleLogout} />
       <Suspense fallback={<Loading />}>
         <Routes>
@@ -85,7 +87,6 @@ function AppContent() {
           <Route path="*" element={<NotFound404 />} />
         </Routes>
       </Suspense>
-      {/* Footer should NOT show on 404 — we'll hide inside NotFound page */}
       <Footer />
     </div>
   );
@@ -96,3 +97,4 @@ function App() {
 }
 
 export default App;
+

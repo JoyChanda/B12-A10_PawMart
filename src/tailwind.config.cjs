@@ -1,27 +1,37 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: "class", // use 'class' based dark mode toggling
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,jsx,ts,tsx}"],
 
   theme: {
     extend: {
       colors: {
-        // Keep your main orange tone consistent (optional)
-        orange: {
-          50: "#fff7ed",
-          100: "#ffedd5",
-          200: "#fed7aa",
-          300: "#fdba74",
-          400: "#fb923c",
-          500: "#f97316",
-          600: "#ea580c",
-          700: "#c2410c",
-          800: "#9a3412",
-          900: "#7c2d12",
+        primary: {
+          50: "#f5f3ff",
+          100: "#ede9fe",
+          200: "#ddd6fe",
+          300: "#c4b5fd",
+          400: "#a78bfa",
+          500: "#8b5cf6", // Main Primary: Violet
+          600: "#7c3aed",
+          700: "#6d28d9",
+          800: "#5b21b6",
+          900: "#4c1d95",
+        },
+        secondary: {
+          500: "#10b981", // Emerald
+        },
+        accent: {
+          500: "#f59e0b", // Amber
         },
       },
       fontFamily: {
-        display: ["Inter", "sans-serif"],
+        sans: ["Inter", "system-ui", "sans-serif"],
+        display: ["Outfit", "Inter", "sans-serif"],
+      },
+      borderRadius: {
+        '2xl': '1rem',
+        '3xl': '1.5rem',
       },
     },
   },
@@ -29,7 +39,34 @@ module.exports = {
   plugins: [require("daisyui")],
 
   daisyui: {
-    themes: ["light", "dark"], // use only the basic DaisyUI light/dark pair
-    darkTheme: "dark", // ensures class="dark" syncs with DaisyUI dark theme
+    themes: [
+      {
+        light: {
+          ...require("daisyui/src/theming/themes")["light"],
+          primary: "#8b5cf6",
+          secondary: "#10b981",
+          accent: "#f59e0b",
+          neutral: "#1f2937",
+          "base-100": "#ffffff",
+          "--rounded-box": "1rem",
+          "--rounded-btn": "0.5rem",
+          "--rounded-badge": "1.9rem",
+        },
+        dark: {
+          ...require("daisyui/src/theming/themes")["dark"],
+          primary: "#a78bfa",
+          secondary: "#34d399",
+          accent: "#fbbf24",
+          neutral: "#f3f4f6",
+          "base-100": "#0f172a", // Slate 900
+          "base-200": "#1e293b", // Slate 800
+          "base-300": "#334155", // Slate 700
+          "--rounded-box": "1rem",
+          "--rounded-btn": "0.5rem",
+          "--rounded-badge": "1.9rem",
+        },
+      },
+    ],
   },
 };
+

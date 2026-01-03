@@ -1,361 +1,237 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { FaDog } from "react-icons/fa";
-import { Menu, X, User, LogOut } from "lucide-react";
+import { Menu, X, LogOut, ChevronDown } from "lucide-react";
 import DarkModeToggle from "./DarkModeToggle";
 import { AnimatePresence, motion as Motion } from "framer-motion";
 
 const Navbar = ({ user, handleLogout }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Pets & Supplies", path: "/pets-supplies" },
+  ];
+
+  const authLinks = [
+    { name: "Add Listing", path: "/add-listing" },
+    { name: "My Listings", path: "/my-listings" },
+    { name: "My Orders", path: "/my-orders" },
+  ];
 
   return (
-    <nav className="bg-linear-to-r from-orange-100 via-white to-orange-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 shadow-md py-2 sm:py-3 px-4 sm:px-6 sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto flex justify-between items-center">
-        {/* Left: Logo */}
-        <Link to="/" className="flex items-center gap-1 sm:gap-2">
-          <FaDog className="text-orange-500 dark:text-orange-400 text-2xl sm:text-3xl" />
-          <span className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-100">
-            PawMart
-          </span>
-        </Link>
+    <nav 
+      className={`sticky top-0 z-[100] transition-all duration-300 ${
+        scrolled 
+          ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg shadow-lg py-2" 
+          : "bg-transparent py-4"
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center bg-white/50 dark:bg-slate-800/40 rounded-3xl px-6 py-2 border border-white/20 dark:border-slate-700/30 shadow-sm">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="p-2 bg-primary-500 rounded-xl group-hover:rotate-12 transition-transform duration-300 shadow-lg shadow-primary-500/30">
+              <FaDog className="text-white text-xl" />
+            </div>
+            <span className="text-2xl font-display font-bold text-slate-900 dark:text-white tracking-tight">
+              Paw<span className="text-primary-500">Mart</span>
+            </span>
+          </Link>
 
-        {/* Middle: Links - Desktop */}
-        <div className="hidden md:flex gap-6 text-gray-700 dark:text-gray-300 font-medium">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              isActive
-                ? "text-orange-600 dark:text-orange-400 font-semibold border-b-2 border-orange-500 dark:border-orange-400 pb-1"
-                : "hover:text-orange-500 dark:hover:text-orange-400"
-            }
-          >
-            Home
-          </NavLink>
-
-          <NavLink
-            to="/pets-supplies"
-            className={({ isActive }) =>
-              isActive
-                ? "text-orange-600 dark:text-orange-400 font-semibold border-b-2 border-orange-500 dark:border-orange-400 pb-1"
-                : "hover:text-orange-500 dark:hover:text-orange-400"
-            }
-          >
-            Pets & Supplies
-          </NavLink>
-
-          {user && (
-            <>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-1 lg:gap-2">
+            {[...navLinks, ...(user ? authLinks : [])].map((link) => (
               <NavLink
-                to="/add-listing"
+                key={link.path}
+                to={link.path}
                 className={({ isActive }) =>
-                  isActive
-                    ? "text-orange-600 dark:text-orange-400 font-semibold border-b-2 border-orange-500 dark:border-orange-400 pb-1"
-                    : "hover:text-orange-500 dark:hover:text-orange-400"
+                  `px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                    isActive
+                      ? "bg-primary-500 text-white shadow-md shadow-primary-500/25"
+                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary-500"
+                  }`
                 }
               >
-                Add Listing
+                {link.name}
               </NavLink>
-              <NavLink
-                to="/my-listings"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-orange-600 dark:text-orange-400 font-semibold border-b-2 border-orange-500 dark:border-orange-400 pb-1"
-                    : "hover:text-orange-500 dark:hover:text-orange-400"
-                }
-              >
-                My Listings
-              </NavLink>
-              <NavLink
-                to="/my-orders"
-                className={({ isActive }) =>
-                  isActive
-                    ? "text-orange-600 dark:text-orange-400 font-semibold border-b-2 border-orange-500 dark:border-orange-400 pb-1"
-                    : "hover:text-orange-500 dark:hover:text-orange-400"
-                }
-              >
-                My Orders
-              </NavLink>
-            </>
-          )}
-        </div>
-
-        {/* Right: Auth + Theme Toggle */}
-        <div className="hidden md:flex gap-2 lg:gap-3 items-center">
-          {user ? (
-            <ProfileMenu user={user} onLogout={handleLogout} />
-          ) : (
-            <>
-              <Link
-                to="/login"
-                className="bg-orange-500 dark:bg-orange-600 text-white px-3 lg:px-5 py-2 rounded-lg font-semibold hover:bg-orange-600 dark:hover:bg-orange-700 flex items-center justify-center text-sm lg:text-base"
-              >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                className="bg-gray-800 dark:bg-gray-700 text-white px-3 lg:px-5 py-2 rounded-lg font-semibold hover:bg-gray-900 dark:hover:bg-gray-600 flex items-center justify-center text-sm lg:text-base"
-              >
-                Register
-              </Link>
-            </>
-          )}
-
-          {/* 🌙 Theme Toggle (white moon icon, right side) */}
-          <div className="ml-2">
-            <DarkModeToggle />
+            ))}
           </div>
-        </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 text-gray-700 dark:text-gray-300"
-          aria-label="Toggle menu"
-        >
-          {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden mt-4 pb-4 border-t border-orange-100 dark:border-gray-700">
-          <div className="flex flex-col gap-4 pt-4">
-            <NavLink
-              to="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className={({ isActive }) =>
-                isActive
-                  ? "text-orange-600 dark:text-orange-400 font-semibold px-4 py-2"
-                  : "text-gray-700 dark:text-gray-300 px-4 py-2 hover:text-orange-500 dark:hover:text-orange-400"
-              }
-            >
-              Home
-            </NavLink>
-            <NavLink
-              to="/pets-supplies"
-              onClick={() => setMobileMenuOpen(false)}
-              className={({ isActive }) =>
-                isActive
-                  ? "text-orange-600 dark:text-orange-400 font-semibold px-4 py-2"
-                  : "text-gray-700 dark:text-gray-300 px-4 py-2 hover:text-orange-500 dark:hover:text-orange-400"
-              }
-            >
-              Pets & Supplies
-            </NavLink>
-            {user && (
-              <>
-                <NavLink
-                  to="/add-listing"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "text-orange-600 dark:text-orange-400 font-semibold px-4 py-2"
-                      : "text-gray-700 dark:text-gray-300 px-4 py-2 hover:text-orange-500 dark:hover:text-orange-400"
-                  }
-                >
-                  Add Listing
-                </NavLink>
-                <NavLink
-                  to="/my-listings"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "text-orange-600 dark:text-orange-400 font-semibold px-4 py-2"
-                      : "text-gray-700 dark:text-gray-300 px-4 py-2 hover:text-orange-500 dark:hover:text-orange-400"
-                  }
-                >
-                  My Listings
-                </NavLink>
-                <NavLink
-                  to="/my-orders"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) =>
-                    isActive
-                      ? "text-orange-600 dark:text-orange-400 font-semibold px-4 py-2"
-                      : "text-gray-700 dark:text-gray-300 px-4 py-2 hover:text-orange-500 dark:hover:text-orange-400"
-                  }
-                >
-                  My Orders
-                </NavLink>
-                <div className="px-4">
-                  <ProfileMenu
-                    user={user}
-                    onLogout={() => {
-                      handleLogout();
-                      setMobileMenuOpen(false);
-                    }}
-                    variant="mobile"
-                  />
-                </div>
-              </>
-            )}
-            {!user && (
-              <>
+          {/* Right Section */}
+          <div className="hidden md:flex items-center gap-4">
+            <DarkModeToggle />
+            {user ? (
+              <ProfileMenu user={user} onLogout={handleLogout} />
+            ) : (
+              <div className="flex items-center gap-2">
                 <Link
                   to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="mx-4 bg-orange-500 dark:bg-orange-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-orange-600 dark:hover:bg-orange-700 text-center"
+                  className="px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-primary-500 transition-colors"
                 >
-                  Login
+                  Sign In
                 </Link>
                 <Link
                   to="/register"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="mx-4 bg-gray-800 dark:bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-900 dark:hover:bg-gray-600 text-center"
+                  className="px-5 py-2.5 bg-primary-500 hover:bg-primary-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-primary-500/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
                 >
-                  Register
+                  Join Now
                 </Link>
-              </>
+              </div>
             )}
+          </div>
 
-            {/* Mobile Theme Toggle */}
-            <div className="mx-4 mt-2 flex justify-center">
-              <DarkModeToggle afterToggle={() => setMobileMenuOpen(false)} />
-            </div>
+          {/* Mobile Toggle */}
+          <div className="flex md:hidden items-center gap-2">
+            <DarkModeToggle />
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+            >
+              {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <Motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden overflow-hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800"
+          >
+            <div className="px-4 py-6 space-y-2">
+              {[...navLinks, ...(user ? authLinks : [])].map((link) => (
+                <NavLink
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={({ isActive }) =>
+                    `block px-4 py-3 rounded-2xl font-semibold transition-all ${
+                      isActive
+                        ? "bg-primary-500 text-white shadow-lg shadow-primary-500/30"
+                        : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                    }`
+                  }
+                >
+                  {link.name}
+                </NavLink>
+              ))}
+              <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
+                {user ? (
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 px-4">
+                      <img
+                        src={user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${user.displayName}`}
+                        className="w-12 h-12 rounded-full border-2 border-primary-500"
+                        alt=""
+                      />
+                      <div>
+                        <p className="font-bold text-slate-900 dark:text-white">{user.displayName}</p>
+                        <p className="text-xs text-slate-500">{user.email}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 font-bold rounded-2xl hover:bg-red-100 transition-colors"
+                    >
+                      <LogOut size={20} />
+                      Sign Out
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-3 px-2">
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="px-4 py-3 text-center font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-2xl"
+                    >
+                      Sign In
+                    </Link>
+                    <Link
+                      to="/register"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="px-4 py-3 text-center font-bold text-white bg-primary-500 rounded-2xl"
+                    >
+                      Join Now
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
 
-export default Navbar;
-
-const ProfileMenu = ({ user, onLogout, variant = "desktop" }) => {
+const ProfileMenu = ({ user, onLogout }) => {
   const [open, setOpen] = useState(false);
-  const containerRef = useRef(null);
-  const [avatarError, setAvatarError] = useState(false);
-
-  const displayName = useMemo(
-    () => user?.displayName || user?.email?.split("@")[0] || "Pet Lover",
-    [user?.displayName, user?.email]
-  );
-
-  const email = user?.email || "No email found";
-
-  const fallbackAvatar = useMemo(
-    () =>
-      `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(
-        displayName
-      )}`,
-    [displayName]
-  );
-
-  const avatarSrc =
-    !avatarError && user?.photoURL ? user.photoURL : fallbackAvatar;
+  const menuRef = useRef(null);
 
   useEffect(() => {
-    if (variant !== "desktop") return undefined;
-    const handleClick = (event) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target)
-      ) {
-        setOpen(false);
-      }
+    const handler = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setOpen(false);
     };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, [variant]);
-
-  if (variant === "mobile") {
-    return (
-      <div className="w-full bg-orange-50/70 dark:bg-gray-800/80 rounded-2xl p-4 border border-orange-100 dark:border-gray-700 text-center space-y-3 shadow-inner">
-        <div className="flex flex-col items-center gap-3">
-          <div className="relative">
-            <img
-              src={avatarSrc}
-              alt={displayName}
-              onError={() => setAvatarError(true)}
-              className="w-20 h-20 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-md"
-            />
-            <span className="absolute -bottom-1 -right-1 bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full shadow">
-              You
-            </span>
-          </div>
-          <div>
-            <p className="text-base font-semibold text-gray-800 dark:text-gray-100">
-              {displayName}
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-300 break-all">
-              {email}
-            </p>
-          </div>
-        </div>
-        <button
-          onClick={onLogout}
-          className="w-full inline-flex items-center justify-center gap-2 bg-orange-500 text-white py-2 rounded-xl font-semibold hover:bg-orange-600 transition-all shadow"
-        >
-          <LogOut size={18} />
-          Logout
-        </button>
-      </div>
-    );
-  }
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   return (
-    <div className="relative" ref={containerRef}>
+    <div className="relative" ref={menuRef}>
       <button
-        type="button"
-        onClick={() => setOpen((prev) => !prev)}
-        className="flex items-center gap-2 bg-white/80 dark:bg-gray-800/80 px-3 py-2 rounded-full border border-orange-100 dark:border-gray-700 shadow hover:shadow-md transition-all"
-        aria-expanded={open}
-        aria-haspopup="dialog"
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-2 p-1 pr-3 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
       >
         <img
-          src={avatarSrc}
-          alt={displayName}
-          onError={() => setAvatarError(true)}
-          className="w-9 h-9 rounded-full object-cover border-2 border-orange-400 dark:border-orange-500"
+          src={user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${user.displayName}`}
+          className="w-8 h-8 rounded-full border border-primary-400"
+          alt=""
         />
-        <div className="flex flex-col items-start">
-          <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">
-            {displayName}
-          </span>
-          <span className="text-xs text-gray-500 dark:text-gray-300">
-            {email}
-          </span>
-        </div>
+        <ChevronDown size={14} className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
       </button>
 
       <AnimatePresence>
         {open && (
           <Motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.96 }}
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.96 }}
-            transition={{ duration: 0.2 }}
-            className="absolute right-0 mt-3 w-64 bg-white dark:bg-gray-900 border border-orange-100 dark:border-gray-700 rounded-2xl shadow-xl overflow-hidden z-50"
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            className="absolute right-0 mt-3 w-64 bg-white dark:bg-slate-800 rounded-3xl shadow-2xl border border-slate-100 dark:border-slate-700 overflow-hidden"
           >
-            <div className="relative flex flex-col items-center gap-3 px-5 pt-6 pb-5 bg-linear-to-br from-orange-100 via-white to-orange-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800">
-              <div className="relative">
-                <img
-                  src={avatarSrc}
-                  alt={displayName}
-                  onError={() => setAvatarError(true)}
-                  className="w-20 h-20 rounded-full object-cover border-4 border-white dark:border-gray-800 shadow-lg"
-                />
-                <div className="absolute inset-0 rounded-full border border-orange-400/60 dark:border-orange-500/60 animate-pulse" />
-              </div>
-              <div className="text-center space-y-1">
-                <p className="text-lg font-semibold text-gray-800 dark:text-gray-100">
-                  {displayName}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300 break-all">
-                  {email}
-                </p>
-              </div>
+            <div className="p-5 text-center bg-primary-50 dark:bg-primary-900/10">
+              <img
+                src={user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${user.displayName}`}
+                className="w-16 h-16 rounded-full mx-auto border-4 border-white dark:border-slate-800 shadow-xl"
+                alt=""
+              />
+              <p className="mt-3 font-bold text-slate-900 dark:text-white">{user.displayName}</p>
+              <p className="text-xs text-slate-500 truncate">{user.email}</p>
             </div>
-            <div className="px-5 py-4 bg-white dark:bg-gray-900 flex flex-col gap-3">
+            <div className="p-2">
               <button
                 onClick={() => {
-                  setOpen(false);
                   onLogout();
+                  setOpen(false);
                 }}
-                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-orange-500 text-white font-semibold hover:bg-orange-600 transition-all shadow"
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-2xl transition-colors"
               >
                 <LogOut size={18} />
-                Logout
+                Sign Out
               </button>
             </div>
           </Motion.div>
@@ -364,3 +240,6 @@ const ProfileMenu = ({ user, onLogout, variant = "desktop" }) => {
     </div>
   );
 };
+
+export default Navbar;
+

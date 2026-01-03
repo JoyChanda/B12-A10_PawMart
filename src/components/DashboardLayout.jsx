@@ -152,15 +152,38 @@ export default function DashboardLayout() {
       </nav>
 
       <div className="flex pt-20">
-        {/* Sidebar */}
+        {/* Sidebar for Desktop */}
+        <aside className="hidden lg:block sticky top-20 h-[calc(100vh-80px)] w-72 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 overflow-y-auto z-30">
+          <nav className="p-4 space-y-2">
+            {menuItems.map((item) => (
+              <NavLink
+                key={item.path}
+                to={item.path}
+                end={item.end}
+                className={({ isActive }) =>
+                  `flex items-center gap-3 px-4 py-3.5 rounded-xl font-semibold transition-all ${
+                    isActive
+                      ? "bg-primary-600 text-white shadow-lg shadow-primary-600/25"
+                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
+                  }`
+                }
+              >
+                <item.icon size={20} />
+                <span>{item.label}</span>
+              </NavLink>
+            ))}
+          </nav>
+        </aside>
+
+        {/* Sidebar for Mobile */}
         <AnimatePresence>
-          {(sidebarOpen || window.innerWidth >= 1024) && (
+          {sidebarOpen && (
             <Motion.aside
-              initial={{ x: -300 }}
+              initial={{ x: -288 }}
               animate={{ x: 0 }}
-              exit={{ x: -300 }}
-              transition={{ type: "spring", damping: 25 }}
-              className="fixed lg:sticky top-20 left-0 bottom-0 w-72 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 overflow-y-auto z-30"
+              exit={{ x: -288 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="lg:hidden fixed top-20 left-0 bottom-0 w-72 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 overflow-y-auto z-30"
             >
               <nav className="p-4 space-y-2">
                 {menuItems.map((item) => (

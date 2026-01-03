@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { FaDog } from "react-icons/fa";
-import { Menu, X, LogOut, ChevronDown } from "lucide-react";
+import { Menu, X, LogOut, ChevronDown, User as UserIcon, LayoutDashboard } from "lucide-react";
 import DarkModeToggle from "./DarkModeToggle";
 import { AnimatePresence, motion as Motion } from "framer-motion";
 
@@ -239,7 +239,24 @@ const ProfileMenu = ({ user, onLogout }) => {
               <p className="mt-3 font-bold text-slate-900 dark:text-white">{user.displayName}</p>
               <p className="text-xs text-slate-500 truncate">{user.email}</p>
             </div>
-            <div className="p-2">
+            <div className="p-2 space-y-1">
+              <Link
+                to="/dashboard/profile"
+                onClick={() => setOpen(false)}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-2xl transition-colors"
+              >
+                <UserIcon size={18} />
+                My Profile
+              </Link>
+              <Link
+                to="/dashboard"
+                onClick={() => setOpen(false)}
+                className="w-full flex items-center gap-3 px-4 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-2xl transition-colors"
+              >
+                <LayoutDashboard size={18} />
+                Dashboard
+              </Link>
+              <div className="h-px bg-slate-100 dark:bg-slate-700 my-1 mx-2"></div>
               <button
                 onClick={() => {
                   onLogout();

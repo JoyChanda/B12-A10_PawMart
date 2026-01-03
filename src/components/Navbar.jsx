@@ -47,8 +47,8 @@ const Navbar = ({ user, handleLogout }) => {
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="p-2.5 bg-gradient-to-br from-primary-600 to-primary-700 rounded-2xl group-hover:rotate-[15deg] transition-transform duration-500 shadow-lg shadow-primary-500/30">
-              <FaDog className="text-white text-2xl" />
+            <div className="p-2.5 bg-primary-100 dark:bg-gradient-to-br dark:from-primary-600 dark:to-primary-700 rounded-2xl group-hover:rotate-[15deg] transition-transform duration-500 shadow-md dark:shadow-lg dark:shadow-primary-500/30">
+              <FaDog className="text-slate-950 dark:text-white text-2xl" />
             </div>
             <span className="text-2xl font-display font-bold text-slate-950 dark:text-white tracking-tight">
               Paw<span className="text-primary-700 dark:text-primary-500">Mart</span>
@@ -137,10 +137,10 @@ const Navbar = ({ user, handleLogout }) => {
                   to={link.path}
                   onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `flex items-center justify-between px-6 py-4 rounded-[1.5rem] font-extrabold transition-all ${
+                    `flex items-center justify-between px-6 py-4 rounded-[1.5rem] font-black transition-all ${
                       isActive
-                        ? "bg-primary-600 text-white shadow-xl shadow-primary-600/30"
-                        : "text-slate-950 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/50"
+                        ? "bg-primary-50 text-primary-700 dark:bg-primary-600 dark:text-white shadow-sm dark:shadow-xl dark:shadow-primary-600/30"
+                        : "text-slate-900 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/50"
                     }`
                   }
                 >

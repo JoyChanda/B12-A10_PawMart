@@ -351,7 +351,7 @@ export default function PetsSupplies() {
             </div>
             <button 
               onClick={handleResetFilters}
-              className="px-8 py-3 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-600/25"
+              className="px-10 py-4 bg-white dark:bg-slate-950 text-primary-600 dark:text-white font-black rounded-2xl hover:bg-slate-50 dark:hover:bg-black transition-all shadow-xl hover:scale-105 active:scale-95 text-lg border-2 border-primary-100 dark:border-transparent"
             >
               Reset All Filters
             </button>

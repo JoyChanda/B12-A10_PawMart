@@ -19,6 +19,7 @@ import {
   Bell
 } from "lucide-react";
 import DarkModeToggle from "./DarkModeToggle";
+import { FaDog } from "react-icons/fa";
 
 export default function DashboardLayout() {
   const { user } = useAuth();
@@ -58,12 +59,12 @@ export default function DashboardLayout() {
               {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
             
-            <NavLink to="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-600 to-primary-700 flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                🐾
+            <NavLink to="/" className="flex items-center gap-2 group">
+              <div className="w-10 h-10 rounded-xl bg-primary-100 dark:bg-gradient-to-br dark:from-primary-600 dark:to-primary-700 flex items-center justify-center text-slate-950 dark:text-white shadow-md dark:shadow-lg group-hover:rotate-[15deg] transition-transform duration-500">
+                <FaDog size={20} />
               </div>
-              <span className="font-display font-bold text-xl text-slate-950 dark:text-white hidden sm:block">
-                PawMart
+              <span className="font-display font-bold text-xl text-slate-950 dark:text-white hidden sm:block tracking-tight">
+                Paw<span className="text-primary-700 dark:text-primary-500">Mart</span>
               </span>
             </NavLink>
           </div>
@@ -165,10 +166,10 @@ export default function DashboardLayout() {
                 to={item.path}
                 end={item.end}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 px-4 py-3.5 rounded-xl font-semibold transition-all ${
+                  `flex items-center gap-3 px-4 py-3.5 rounded-xl font-bold transition-all ${
                     isActive
-                      ? "bg-primary-600 text-white shadow-lg shadow-primary-600/25"
-                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 font-bold"
+                      ? "bg-primary-50 text-primary-700 dark:bg-primary-600 dark:text-white shadow-sm dark:shadow-primary-600/25"
+                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                   }`
                 }
               >
@@ -197,10 +198,10 @@ export default function DashboardLayout() {
                     end={item.end}
                     onClick={() => setSidebarOpen(false)}
                     className={({ isActive }) =>
-                      `flex items-center gap-3 px-4 py-3.5 rounded-xl font-semibold transition-all ${
+                      `flex items-center gap-3 px-4 py-3.5 rounded-xl font-bold transition-all ${
                         isActive
-                          ? "bg-primary-600 text-white shadow-lg shadow-primary-600/25"
-                          : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 font-bold"
+                          ? "bg-primary-50 text-primary-700 dark:bg-primary-600 dark:text-white shadow-sm dark:shadow-primary-600/25"
+                          : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
                       }`
                     }
                   >

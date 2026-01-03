@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { motion as Motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { 
+  signInWithEmailAndPassword, 
+  signInWithPopup, 
+  createUserWithEmailAndPassword, 
+  updateProfile 
+} from "firebase/auth";
 import { auth, provider } from "../firebase.config";
 import toast from "react-hot-toast";
 import { Eye, EyeOff, Loader2, Mail, Lock, Sparkles, UserCheck, AlertCircle } from "lucide-react";
@@ -34,12 +39,44 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Demo User Auto-Fill
-  const fillDemoCredentials = () => {
-    setEmail("demo@pawmart.com");
-    setPassword("demo123");
+  // Demo User Auto-Login with Registration Fallback
+  const handleDemoLogin = async () => {
+    if (isSubmitting) return;
+    
+    const demoEmail = "demo@pawmart.com";
+    const demoPassword = "Demo123"; // Updated to meet password criteria (uppercase + lowercase)
+    
     setErrors({});
-    toast.success("Demo credentials filled! Click Sign In to continue.", { icon: "🎯" });
+    setIsSubmitting(true);
+    const toastId = toast.loading("Accessing demo account...");
+    
+    try {
+      // 1. Try to Login
+      await signInWithEmailAndPassword(auth, demoEmail, demoPassword);
+      toast.success("Welcome back to Demo Mode! 🚀", { id: toastId });
+      navigate("/");
+    } catch (error) {
+      // 2. If user doesn't exist, try to Register
+      if (error.code === "auth/user-not-found" || error.code === "auth/invalid-credential" || error.code === "auth/wrong-password") {
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, demoEmail, demoPassword);
+          await updateProfile(userCredential.user, {
+            displayName: "Demo User",
+            photoURL: "https://api.dicebear.com/7.x/avataaars/svg?seed=Demo"
+          });
+          toast.success("Demo account initialized! Enjoy PawMart. 🐾", { id: toastId });
+          navigate("/");
+        } catch (regError) {
+          // If even registration fails (maybe email taken with different password)
+          toast.error("Demo access failed. Please try manual registration.", { id: toastId });
+          setIsSubmitting(false);
+          console.error("Demo registration error:", regError);
+        }
+      } else {
+        toast.error("Authentication system busy. Please try later.", { id: toastId });
+        setIsSubmitting(false);
+      }
+    }
   };
 
   const handleLogin = async (e) => {
@@ -131,7 +168,7 @@ const Login = () => {
           {/* Demo Credentials Button */}
           <button
             type="button"
-            onClick={fillDemoCredentials}
+            onClick={handleDemoLogin}
             disabled={isSubmitting}
             className="w-full mb-6 flex items-center justify-center gap-2 px-6 py-3 bg-amber-50 dark:bg-amber-900/20 border-2 border-amber-200 dark:border-amber-700 text-amber-800 dark:text-amber-400 font-bold rounded-xl hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-all disabled:opacity-50"
           >

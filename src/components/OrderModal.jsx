@@ -235,7 +235,7 @@ export default function OrderModal({ item, isOpen, onClose, onSuccess }) {
                   <button
                     type="button"
                     onClick={onClose}
-                    className="flex-1 px-8 py-4 border-2 border-slate-200 dark:border-slate-700 rounded-2xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+                    className="flex-1 px-8 py-4 border-2 border-slate-200 dark:border-slate-700 rounded-2xl font-bold text-slate-950 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
                   >
                     Discard Charge
                   </button>

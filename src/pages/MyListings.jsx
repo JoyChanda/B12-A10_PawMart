@@ -244,10 +244,10 @@ export default function MyListings() {
                       </td>
                       <td className="px-8 py-6">
                         <div className="flex items-center justify-end gap-2">
-                           <Link to={`/listing/${listing._id}`} className="p-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:bg-primary-500 hover:text-white transition-all shadow-sm">
+                           <Link to={`/listing/${listing._id}`} className="p-3 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-400 rounded-xl hover:bg-primary-500 hover:text-white transition-all shadow-sm">
                              <Eye size={20} />
                            </Link>
-                           <button onClick={() => openEditModal(listing)} className="p-3 bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:bg-primary-500 hover:text-white transition-all shadow-sm">
+                           <button onClick={() => openEditModal(listing)} className="p-3 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-400 rounded-xl hover:bg-primary-500 hover:text-white transition-all shadow-sm">
                              <Edit3 size={20} />
                            </button>
                            <button onClick={() => { setSelectedListing(listing); setIsDeleteOpen(true); }} className="p-3 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm">
@@ -317,7 +317,7 @@ export default function MyListings() {
                 </div>
 
                 <div className="flex gap-4 mt-10">
-                  <button onClick={() => setIsEditOpen(false)} className="flex-1 px-8 py-4 border-2 border-slate-200 dark:border-slate-800 rounded-2xl font-bold dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">Cancel</button>
+                  <button onClick={() => setIsEditOpen(false)} className="flex-1 px-8 py-4 border-2 border-slate-200 dark:border-slate-800 rounded-2xl font-bold text-slate-950 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">Cancel</button>
                   <button onClick={handleUpdate} disabled={submitLoading} className="flex-1 btn-premium py-4">
                     {submitLoading ? <Loader2 className="animate-spin mx-auto" /> : "Sync Changes"}
                   </button>
@@ -351,7 +351,7 @@ export default function MyListings() {
                 Are you sure you want to remove <span className="font-bold text-red-500">"{selectedListing?.name}"</span>? This cannot be undone.
               </p>
               <div className="flex gap-4">
-                <button onClick={() => setIsDeleteOpen(false)} className="flex-1 py-4 border-2 border-slate-200 dark:border-slate-700 rounded-2xl font-bold dark:text-white">Keep it</button>
+                <button onClick={() => setIsDeleteOpen(false)} className="flex-1 py-4 border-2 border-slate-200 dark:border-slate-700 rounded-2xl font-bold text-slate-950 dark:text-white">Keep it</button>
                 <button onClick={handleDelete} disabled={deleteLoading} className="flex-1 py-4 bg-red-500 text-white rounded-2xl font-bold hover:bg-red-600 shadow-lg shadow-red-500/25">
                   {deleteLoading ? <Loader2 className="animate-spin mx-auto" /> : "Delete"}
                 </button>

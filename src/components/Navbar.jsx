@@ -17,32 +17,33 @@ const Navbar = ({ user, handleLogout }) => {
 
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "Pets & Supplies", path: "/pets-supplies" },
+    { name: "Marketplace", path: "/pets-supplies" },
+    { name: "Support", path: "/pets-supplies" },
   ];
 
   const authLinks = [
     { name: "Add Listing", path: "/add-listing" },
-    { name: "My Listings", path: "/my-listings" },
-    { name: "My Orders", path: "/my-orders" },
+    { name: "My Account", path: "/my-listings" },
+    { name: "Transactions", path: "/my-orders" },
   ];
 
   return (
     <nav 
-      className={`sticky top-0 z-[100] transition-all duration-300 ${
+      className={`fixed top-0 inset-x-0 z-[100] transition-all duration-500 border-b ${
         scrolled 
-          ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg shadow-lg py-2" 
-          : "bg-transparent py-4"
+          ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border-slate-200 dark:border-slate-800 py-3 shadow-xl" 
+          : "bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl border-transparent py-5"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center bg-white/50 dark:bg-slate-800/40 rounded-3xl px-6 py-2 border border-white/20 dark:border-slate-700/30 shadow-sm">
+        <div className="flex justify-between items-center">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="p-2 bg-primary-500 rounded-xl group-hover:rotate-12 transition-transform duration-300 shadow-lg shadow-primary-500/30">
-              <FaDog className="text-white text-xl" />
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="p-2.5 bg-gradient-to-br from-primary-600 to-primary-700 rounded-2xl group-hover:rotate-[15deg] transition-transform duration-500 shadow-lg shadow-primary-500/30">
+              <FaDog className="text-white text-2xl" />
             </div>
-            <span className="text-2xl font-display font-bold text-slate-900 dark:text-white tracking-tight">
-              Paw<span className="text-primary-500">Mart</span>
+            <span className="text-2xl font-display font-bold text-slate-950 dark:text-white tracking-tight">
+              Paw<span className="text-primary-700 dark:text-primary-500">Mart</span>
             </span>
           </Link>
 
@@ -50,50 +51,61 @@ const Navbar = ({ user, handleLogout }) => {
           <div className="hidden md:flex items-center gap-1 lg:gap-2">
             {[...navLinks, ...(user ? authLinks : [])].map((link) => (
               <NavLink
-                key={link.path}
+                key={link.path + link.name}
                 to={link.path}
-                className={({ isActive }) =>
-                  `px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+                  className={({ isActive }) =>
+                  `px-5 py-2.5 rounded-2xl text-[15px] font-extrabold transition-all duration-300 relative group overflow-hidden ${
                     isActive
-                      ? "bg-primary-500 text-white shadow-md shadow-primary-500/25"
-                      : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-primary-500"
+                      ? "text-primary-700 dark:text-primary-400"
+                      : "text-slate-950 dark:text-slate-300 hover:text-primary-600"
                   }`
                 }
               >
-                {link.name}
+                {({ isActive }) => (
+                  <>
+                    <span className="relative z-10">{link.name}</span>
+                    {isActive && (
+                      <Motion.div 
+                        layoutId="navUnderline"
+                        className="absolute bottom-1 left-5 right-5 h-1 bg-primary-600 dark:bg-primary-500 rounded-full"
+                      />
+                    )}
+                  </>
+                )}
               </NavLink>
             ))}
           </div>
 
           {/* Right Section */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-5">
             <DarkModeToggle />
+            <div className="h-8 w-px bg-slate-300 dark:bg-slate-800 mx-1"></div>
             {user ? (
               <ProfileMenu user={user} onLogout={handleLogout} />
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3">
                 <Link
                   to="/login"
-                  className="px-5 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-primary-500 transition-colors"
+                  className="px-6 py-2.5 text-[15px] font-extrabold text-slate-900 dark:text-slate-200 hover:text-primary-600 transition-colors"
                 >
-                  Sign In
+                  Login
                 </Link>
                 <Link
                   to="/register"
-                  className="px-5 py-2.5 bg-primary-500 hover:bg-primary-600 text-white text-sm font-bold rounded-xl shadow-lg shadow-primary-500/25 transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  className="btn-premium px-8 py-3 rounded-2xl text-[15px] dark:shadow-primary-500/20 shadow-primary-600/30"
                 >
-                  Join Now
+                  Join Us
                 </Link>
               </div>
             )}
           </div>
 
           {/* Mobile Toggle */}
-          <div className="flex md:hidden items-center gap-2">
+          <div className="flex md:hidden items-center gap-4">
             <DarkModeToggle />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+              className="p-3 text-slate-900 dark:text-slate-300 bg-slate-200/50 dark:bg-slate-800 rounded-2xl transition-all active:scale-90"
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -105,40 +117,40 @@ const Navbar = ({ user, handleLogout }) => {
       <AnimatePresence>
         {mobileMenuOpen && (
           <Motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden overflow-hidden bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="md:hidden absolute top-full left-0 right-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden"
           >
-            <div className="px-4 py-6 space-y-2">
+            <div className="px-6 py-8 space-y-3">
               {[...navLinks, ...(user ? authLinks : [])].map((link) => (
                 <NavLink
-                  key={link.path}
+                  key={link.path + link.name}
                   to={link.path}
                   onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `block px-4 py-3 rounded-2xl font-semibold transition-all ${
+                    `flex items-center justify-between px-6 py-4 rounded-[1.5rem] font-extrabold transition-all ${
                       isActive
-                        ? "bg-primary-500 text-white shadow-lg shadow-primary-500/30"
-                        : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+                        ? "bg-primary-600 text-white shadow-xl shadow-primary-600/30"
+                        : "text-slate-950 dark:text-slate-300 bg-slate-100 dark:bg-slate-800/50"
                     }`
                   }
                 >
                   {link.name}
                 </NavLink>
               ))}
-              <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
+              <div className="pt-6 mt-6 border-t border-slate-200 dark:border-slate-800">
                 {user ? (
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3 px-4">
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-4 px-2">
                       <img
                         src={user.photoURL || `https://api.dicebear.com/7.x/initials/svg?seed=${user.displayName}`}
-                        className="w-12 h-12 rounded-full border-2 border-primary-500"
+                        className="w-14 h-14 rounded-2xl border-2 border-primary-600 p-0.5"
                         alt=""
                       />
                       <div>
-                        <p className="font-bold text-slate-900 dark:text-white">{user.displayName}</p>
-                        <p className="text-xs text-slate-500">{user.email}</p>
+                        <p className="font-extrabold text-xl text-slate-950 dark:text-white leading-tight">{user.displayName}</p>
+                        <p className="text-sm text-slate-600 dark:text-slate-400 font-bold">{user.email}</p>
                       </div>
                     </div>
                     <button
@@ -146,25 +158,25 @@ const Navbar = ({ user, handleLogout }) => {
                         handleLogout();
                         setMobileMenuOpen(false);
                       }}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 font-bold rounded-2xl hover:bg-red-100 transition-colors"
+                      className="w-full flex items-center justify-center gap-3 py-4 bg-red-100/50 dark:bg-red-500/10 text-red-700 dark:text-red-400 font-extrabold rounded-2xl border border-red-200 dark:border-red-500/20"
                     >
-                      <LogOut size={20} />
-                      Sign Out
+                      <LogOut size={22} />
+                      Terminate Session
                     </button>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 gap-3 px-2">
+                  <div className="grid grid-cols-2 gap-4">
                     <Link
                       to="/login"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="px-4 py-3 text-center font-bold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-2xl"
+                      className="py-4 text-center font-extrabold text-slate-950 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-2xl"
                     >
-                      Sign In
+                      Login
                     </Link>
                     <Link
                       to="/register"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="px-4 py-3 text-center font-bold text-white bg-primary-500 rounded-2xl"
+                      className="py-4 text-center font-extrabold text-white bg-primary-600 rounded-2xl shadow-lg shadow-primary-600/30"
                     >
                       Join Now
                     </Link>
@@ -178,6 +190,8 @@ const Navbar = ({ user, handleLogout }) => {
     </nav>
   );
 };
+
+
 
 const ProfileMenu = ({ user, onLogout }) => {
   const [open, setOpen] = useState(false);
@@ -202,7 +216,7 @@ const ProfileMenu = ({ user, onLogout }) => {
           className="w-8 h-8 rounded-full border border-primary-400"
           alt=""
         />
-        <ChevronDown size={14} className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
+        <ChevronDown size={14} className={`transition-transform duration-300 text-slate-700 dark:text-slate-300 ${open ? "rotate-180" : ""}`} />
       </button>
 
       <AnimatePresence>

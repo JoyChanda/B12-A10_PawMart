@@ -14,6 +14,9 @@ import ListingDetails from "./pages/ListingDetails";
 import MyListings from "./pages/MyListings";
 import MyOrders from "./pages/MyOrders";
 import Profile from "./pages/Profile";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Help from "./pages/Help";
 import NotFound404 from "./pages/NotFound404";
 import PrivateRoute from "./components/PrivateRoute";
 import ScrollToTop from "./components/ScrollToTop";
@@ -64,8 +67,14 @@ function AppContent() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           
+          
           {/* Listing Details - Public but requires login for order */}
           <Route path="/listing/:id" element={<ListingDetails />} />
+
+          {/* Additional Pages */}
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/help" element={<Help />} />
 
           {/* Dashboard Routes - All Private */}
           <Route

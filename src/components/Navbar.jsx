@@ -18,7 +18,9 @@ const Navbar = ({ user, handleLogout }) => {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Marketplace", path: "/pets-supplies" },
-    { name: "Support", path: "/pets-supplies" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+    { name: "Help", path: "/help" },
   ];
 
   const authLinks = [

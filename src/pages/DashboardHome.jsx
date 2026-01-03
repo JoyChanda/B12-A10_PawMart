@@ -12,6 +12,18 @@ import {
   Edit,
   Trash2
 } from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  Cell
+} from "recharts";
 
 export default function DashboardHome() {
   const { user } = useAuth();
@@ -67,13 +79,13 @@ export default function DashboardHome() {
 
       // Prepare chart data (last 6 months)
       const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
-      const listingsData = months.map(() => Math.floor(Math.random() * 10) + 1);
-      const ordersData = months.map(() => Math.floor(Math.random() * 8) + 1);
+      const formattedData = months.map((month) => ({
+        name: month,
+        listings: Math.floor(Math.random() * 10) + 2,
+        orders: Math.floor(Math.random() * 8) + 1,
+      }));
 
-      setChartData({
-        listings: listingsData,
-        orders: ordersData
-      });
+      setChartData(formattedData);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
     } finally {
@@ -171,26 +183,48 @@ export default function DashboardHome() {
           className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700"
         >
           <h3 className="text-xl font-bold text-slate-950 dark:text-white mb-6">Listings Overview</h3>
-          <div className="space-y-4">
-            {["Jan", "Feb", "Mar", "Apr", "May", "Jun"].map((month, index) => (
-              <div key={month} className="flex items-center gap-3">
-                <span className="text-sm font-semibold text-slate-600 dark:text-slate-400 w-8">{month}</span>
-                <div className="flex-1 h-8 bg-slate-100 dark:bg-slate-700 rounded-lg overflow-hidden">
-                  <Motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: `${(chartData.listings[index] / 10) * 100}%` }}
-                    transition={{ delay: 0.5 + index * 0.1, duration: 0.6 }}
-                    className="h-full bg-gradient-to-r from-primary-600 to-primary-700 flex items-center justify-end pr-2"
-                  >
-                    <span className="text-xs font-bold text-white">{chartData.listings[index]}</span>
-                  </Motion.div>
-                </div>
-              </div>
-            ))}
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: "#64748b", fontSize: 12, fontWeight: 600 }}
+                  dy={10}
+                />
+                <YAxis hide />
+                <Tooltip 
+                  cursor={{ fill: "#f1f5f9" }}
+                  contentStyle={{ 
+                    borderRadius: "12px", 
+                    border: "none", 
+                    boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)" 
+                  }}
+                />
+                <Bar 
+                  dataKey="listings" 
+                  fill="#6366f1" 
+                  radius={[6, 6, 0, 0]} 
+                  barSize={32}
+                >
+                  {chartData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={`url(#barGradient)`} />
+                  ))}
+                </Bar>
+                <defs>
+                  <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#6366f1" />
+                    <stop offset="100%" stopColor="#4f46e5" />
+                  </linearGradient>
+                </defs>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </Motion.div>
 
-        {/* Line Chart - Orders */}
+        {/* Area Chart - Orders */}
         <Motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -198,24 +232,41 @@ export default function DashboardHome() {
           className="bg-white dark:bg-slate-800 rounded-2xl p-6 border border-slate-200 dark:border-slate-700"
         >
           <h3 className="text-xl font-bold text-slate-950 dark:text-white mb-6">Orders Trend</h3>
-          <div className="h-64 flex items-end justify-between gap-2">
-            {chartData.orders.map((value, index) => (
-              <div key={index} className="flex-1 flex flex-col items-center gap-2">
-                <Motion.div
-                  initial={{ height: 0 }}
-                  animate={{ height: `${(value / 8) * 100}%` }}
-                  transition={{ delay: 0.5 + index * 0.1, duration: 0.6 }}
-                  className="w-full bg-gradient-to-t from-emerald-600 to-emerald-400 rounded-t-lg relative"
-                >
-                  <span className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-slate-950 dark:text-white">
-                    {value}
-                  </span>
-                </Motion.div>
-                <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">
-                  {["Jan", "Feb", "Mar", "Apr", "May", "Jun"][index]}
-                </span>
-              </div>
-            ))}
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData}>
+                <defs>
+                  <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: "#64748b", fontSize: 12, fontWeight: 600 }}
+                  dy={10}
+                />
+                <YAxis hide />
+                <Tooltip 
+                  contentStyle={{ 
+                    borderRadius: "12px", 
+                    border: "none", 
+                    boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)" 
+                  }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="orders" 
+                  stroke="#10b981" 
+                  strokeWidth={3}
+                  fillOpacity={1} 
+                  fill="url(#colorOrders)" 
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
         </Motion.div>
       </div>

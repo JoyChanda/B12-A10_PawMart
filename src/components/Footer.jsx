@@ -10,15 +10,15 @@ export default function Footer() {
   const usefulLinks = [
     { name: "Home", path: "/" },
     { name: "Marketplace", path: "/pets-supplies" },
-    { name: "Add Listing", path: "/add-listing" },
-    { name: "My Account", path: "/my-listings" },
+    { name: "About Us", path: "/about" },
+    { name: "Contact Us", path: "/contact" },
   ];
 
   const serviceLinks = [
-    { name: "Pet Adoption", path: "/pets-supplies" },
-    { name: "Pet Supplies", path: "/pets-supplies" },
-    { name: "Community", path: "/" },
-    { name: "Support", path: "/" },
+    { name: "Adoptions", path: "/pets-supplies" },
+    { name: "Pet Care", path: "/about" },
+    { name: "Help Center", path: "/help" },
+    { name: "Dashboard", path: "/dashboard" },
   ];
 
   const socialLinks = [

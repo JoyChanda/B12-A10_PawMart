@@ -57,8 +57,8 @@ export default function Home() {
   return (
     <div className="bg-slate-50 dark:bg-slate-900 transition-colors duration-500 overflow-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-[85vh] flex items-center pt-20 pb-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <section className="relative h-[70vh] min-h-[600px] flex items-center pt-20 pb-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full">
           <Motion.div 
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -130,6 +130,22 @@ export default function Home() {
                   className="w-full aspect-[4/5] lg:aspect-square object-cover"
                 />
               </AnimatePresence>
+              
+              {/* Slide Controls */}
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-6 py-3 rounded-full shadow-2xl">
+                {slides.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`transition-all duration-300 rounded-full ${
+                      currentSlide === index 
+                        ? "w-8 h-2 bg-primary-600" 
+                        : "w-2 h-2 bg-slate-300 dark:bg-slate-700 hover:bg-primary-400"
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
             </div>
             
             {/* Floating Cards */}
@@ -162,7 +178,27 @@ export default function Home() {
             </Motion.div>
           </Motion.div>
         </div>
+
+        {/* Scroll Hint */}
+        <Motion.div 
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 cursor-pointer"
+          onClick={() => window.scrollTo({ top: window.innerHeight * 0.7, behavior: 'smooth' })}
+        >
+          <div className="flex flex-col items-center gap-2 text-slate-400 hover:text-primary-500 transition-colors">
+            <span className="text-sm font-bold uppercase tracking-widest">Explore More</span>
+            <div className="w-6 h-10 border-2 border-current rounded-full p-1">
+              <Motion.div 
+                animate={{ y: [0, 12, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="w-1.5 h-1.5 bg-current rounded-full mx-auto"
+              />
+            </div>
+          </div>
+        </Motion.div>
       </section>
+
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32 py-20">
         {/* Categories Section */}

@@ -243,7 +243,7 @@ export default function ListingDetails() {
               <Package className="text-primary-600" />
               Overview & Description
             </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
+            <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
               {item.description || "This is a premium pet listing with complete health checkups and vaccination records. The pet is very friendly and well-trained, making it perfect for families with children. All necessary documentation and certifications are available."}
             </p>
             <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">

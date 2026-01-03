@@ -44,9 +44,9 @@ export default function DashboardLayout() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
       {/* Top Navbar */}
-      <nav className="fixed top-0 left-0 right-0 h-20 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 z-40">
+      <nav className="fixed top-0 left-0 right-0 h-20 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 z-40">
         <div className="h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           {/* Left: Logo & Mobile Menu Toggle */}
           <div className="flex items-center gap-4">
@@ -153,7 +153,7 @@ export default function DashboardLayout() {
 
       <div className="flex pt-20">
         {/* Sidebar for Desktop */}
-        <aside className="hidden lg:block sticky top-20 h-[calc(100vh-80px)] w-72 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 overflow-y-auto z-30">
+        <aside className="hidden lg:block sticky top-20 h-[calc(100vh-80px)] w-72 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 overflow-y-auto z-30">
           <nav className="p-4 space-y-2">
             {menuItems.map((item) => (
               <NavLink

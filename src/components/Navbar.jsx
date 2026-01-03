@@ -35,7 +35,7 @@ const Navbar = ({ user, handleLogout }) => {
       className={`fixed top-0 inset-x-0 z-[100] transition-all duration-500 border-b ${
         scrolled 
           ? "bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border-slate-200 dark:border-slate-800 py-3 shadow-xl" 
-          : "bg-white/80 dark:bg-slate-900/40 backdrop-blur-xl border-transparent py-5"
+          : "bg-white dark:bg-slate-900/80 backdrop-blur-xl border-slate-100 dark:border-slate-800/50 py-5"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

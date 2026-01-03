@@ -100,7 +100,7 @@ export default function ListingCard({ item }) {
       <div className="p-5 pt-0">
         <button
           onClick={() => nav(`/listing/${item._id}`)}
-          className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-800 dark:to-slate-800/50 text-slate-950 dark:text-white font-bold hover:from-primary-600 hover:to-primary-700 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-primary-500/25 flex items-center justify-center gap-2 group/button"
+          className="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-slate-100 to-slate-50 dark:from-slate-800 dark:to-slate-800/50 text-slate-950 dark:text-white font-bold border border-slate-200 dark:border-slate-700 hover:from-primary-600 hover:to-primary-700 hover:text-white hover:border-primary-600 transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-primary-500/25 flex items-center justify-center gap-2 group/button"
         >
           View Details
           <ArrowRight size={18} className="group-hover/button:translate-x-1 transition-transform" />

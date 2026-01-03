@@ -8,17 +8,24 @@
 
 @layer base {
     :root {
-        --bg: #f8fafc;
+        --bg: #f3f4f6;
+        /* Slate 100 - slightly darker for better contrast with white cards */
         --card: #ffffff;
-        --primary: 139 92 246; /* Violet 500 */
-        --secondary: 16 185 129; /* Emerald 500 */
+        --primary: 139 92 246;
+        /* Violet 500 */
+        --secondary: 16 185 129;
+        /* Emerald 500 */
     }
 
     .dark {
-        --bg: #0f172a;
-        --card: #1e293b;
-        --primary: 167 139 250; /* Violet 400 */
-        --secondary: 52 211 153; /* Emerald 400 */
+        --bg: #020617;
+        /* Slate 950 - deeper dark for premium feel */
+        --card: #0f172a;
+        /* Slate 900 - card surface */
+        --primary: 167 139 250;
+        /* Violet 400 */
+        --secondary: 52 211 153;
+        /* Emerald 400 */
     }
 
     html {
@@ -31,7 +38,12 @@
         min-height: 100vh;
     }
 
-    h1, h2, h3, h4, h5, h6 {
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
         @apply font-display text-slate-900 dark:text-slate-50 tracking-tight;
     }
 }
@@ -69,8 +81,15 @@
 
 /* Animations */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .animate-fade-in {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import API from "../services/api";
 import ListingCard from "../components/ListingCard";
+import ListingCardSkeleton from "../components/ListingCardSkeleton";
 import CategoryCard from "../components/CategoryCard";
 import { Link } from "react-router-dom";
 import { motion as Motion, AnimatePresence } from "framer-motion";
@@ -8,6 +9,7 @@ import { ArrowRight, Sparkles, Heart, ShieldCheck, Zap } from "lucide-react";
 
 export default function Home() {
   const [listings, setListings] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
@@ -32,10 +34,13 @@ export default function Home() {
     document.title = "PawMart | Premium Pet Adoption & Supplies";
     (async () => {
       try {
-        const res = await API.get("/listings", { params: { limit: 6 } });
+        setLoading(true);
+        const res = await API.get("/listings", { params: { limit: 8 } });
         setListings(res.data);
       } catch (err) {
         setListings([]);
+      } finally {
+        setLoading(false);
       }
     })();
   }, []);
@@ -229,8 +234,15 @@ export default function Home() {
               Explore All <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {listings.length > 0 ? (
+          
+          {/* 4 Cards per Row on Desktop (xl) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {loading ? (
+              // Show 8 skeleton loaders while loading
+              Array.from({ length: 8 }).map((_, index) => (
+                <ListingCardSkeleton key={index} />
+              ))
+            ) : listings.length > 0 ? (
               listings.map((l) => <ListingCard key={l._id} item={l} />)
             ) : (
               <div className="col-span-full py-20 text-center glass-card rounded-3xl">

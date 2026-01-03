@@ -35,10 +35,7 @@ export default function DashboardHome() {
   });
   const [recentListings, setRecentListings] = useState([]);
   const [recentOrders, setRecentOrders] = useState([]);
-  const [chartData, setChartData] = useState({
-    listings: [],
-    orders: []
-  });
+  const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

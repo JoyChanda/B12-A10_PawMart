@@ -1,16 +1,19 @@
 import { Suspense } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import DashboardLayout from "./components/DashboardLayout";
 import Loading from "./components/Loading";
 import Home from "./pages/Home";
 import PetsSupplies from "./pages/PetsSupplies";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import DashboardHome from "./pages/DashboardHome";
 import AddListing from "./pages/AddListing";
 import ListingDetails from "./pages/ListingDetails";
 import MyListings from "./pages/MyListings";
 import MyOrders from "./pages/MyOrders";
+import Profile from "./pages/Profile";
 import NotFound404 from "./pages/NotFound404";
 import PrivateRoute from "./components/PrivateRoute";
 import ScrollToTop from "./components/ScrollToTop";
@@ -22,6 +25,7 @@ import toast from "react-hot-toast";
 function AppContent() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -38,12 +42,19 @@ function AppContent() {
     return <Loading />;
   }
 
+  // Check if current route is dashboard
+  const isDashboardRoute = location.pathname.startsWith("/dashboard");
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-500 font-sans">
       <ScrollToTop />
-      <Navbar user={user} handleLogout={handleLogout} />
+      
+      {/* Conditionally render Navbar & Footer only for non-dashboard routes */}
+      {!isDashboardRoute && <Navbar user={user} handleLogout={handleLogout} />}
+      
       <Suspense fallback={<Loading />}>
         <Routes>
+          {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/pets-supplies" element={<PetsSupplies />} />
           <Route
@@ -52,42 +63,32 @@ function AppContent() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          
+          {/* Listing Details - Public but requires login for order */}
+          <Route path="/listing/:id" element={<ListingDetails />} />
+
+          {/* Dashboard Routes - All Private */}
           <Route
-            path="/listing/:id"
+            path="/dashboard"
             element={
               <PrivateRoute>
-                <ListingDetails />
+                <DashboardLayout />
               </PrivateRoute>
             }
-          />
-          <Route
-            path="/add-listing"
-            element={
-              <PrivateRoute>
-                <AddListing />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/my-listings"
-            element={
-              <PrivateRoute>
-                <MyListings />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/my-orders"
-            element={
-              <PrivateRoute>
-                <MyOrders />
-              </PrivateRoute>
-            }
-          />
+          >
+            <Route index element={<DashboardHome />} />
+            <Route path="add-listing" element={<AddListing />} />
+            <Route path="my-listings" element={<MyListings />} />
+            <Route path="my-orders" element={<MyOrders />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
+
+          {/* 404 */}
           <Route path="*" element={<NotFound404 />} />
         </Routes>
       </Suspense>
-      <Footer />
+      
+      {!isDashboardRoute && <Footer />}
     </div>
   );
 }

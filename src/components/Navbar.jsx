@@ -22,9 +22,10 @@ const Navbar = ({ user, handleLogout }) => {
   ];
 
   const authLinks = [
-    { name: "Add Listing", path: "/add-listing" },
-    { name: "My Account", path: "/my-listings" },
-    { name: "Transactions", path: "/my-orders" },
+    { name: "Dashboard", path: "/dashboard" },
+    { name: "Add Listing", path: "/dashboard/add-listing" },
+    { name: "My Listings", path: "/dashboard/my-listings" },
+    { name: "My Orders", path: "/dashboard/my-orders" },
   ];
 
   return (

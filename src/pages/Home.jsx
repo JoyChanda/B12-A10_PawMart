@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { motion as Motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Sparkles, Heart, ShieldCheck, Zap } from "lucide-react";
 import toast from "react-hot-toast";
+import demoListings from "../data/listings.json";
 
 export default function Home() {
   const [listings, setListings] = useState([]);
@@ -37,9 +38,9 @@ export default function Home() {
       try {
         setLoading(true);
         const res = await API.get("/listings", { params: { limit: 8 } });
-        setListings(res.data);
+        setListings(res.data?.length > 0 ? res.data : demoListings);
       } catch (err) {
-        setListings([]);
+        setListings(demoListings);
       } finally {
         setLoading(false);
       }

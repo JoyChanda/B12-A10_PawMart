@@ -5,6 +5,7 @@ import API from "../services/api";
 import ListingCard from "../components/ListingCard";
 import ListingCardSkeleton from "../components/ListingCardSkeleton";
 import { Search, Filter, Loader2, PackageSearch, SlidersHorizontal, ChevronLeft, ChevronRight, X } from "lucide-react";
+import demoListings from "../data/listings.json";
 
 const categoryFilters = [
   "All",
@@ -65,12 +66,13 @@ export default function PetsSupplies() {
           params,
           signal: controller.signal,
         });
-        setListings(res.data);
-        setFilteredListings(res.data);
+        const data = res.data?.length > 0 ? res.data : demoListings;
+        setListings(data);
+        setFilteredListings(data);
       } catch (err) {
         if (err.name !== "CanceledError" && err.code !== "ERR_CANCELED") {
-          setListings([]);
-          setFilteredListings([]);
+          setListings(demoListings);
+          setFilteredListings(demoListings);
         }
       } finally {
         setIsLoading(false);

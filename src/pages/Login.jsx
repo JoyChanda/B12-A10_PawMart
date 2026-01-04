@@ -92,8 +92,10 @@ const Login = () => {
     }
 
     setIsSubmitting(true);
+    const isAdminEmail = email.trim() === "admin@pawmart.com";
 
     try {
+      // 1. Try to Login
       const result = await signInWithEmailAndPassword(auth, email.trim(), password);
       
       // Sync with MongoDB
@@ -106,6 +108,30 @@ const Login = () => {
       toast.success("Welcome back! 🎉");
       navigate("/");
     } catch (error) {
+      // 2. Auto-register if it's the admin account and not found
+      if (isAdminEmail && (error.code === "auth/user-not-found" || error.code === "auth/invalid-credential")) {
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, email.trim(), password);
+          await updateProfile(userCredential.user, {
+            displayName: "PawMart Admin",
+            photoURL: "https://api.dicebear.com/7.x/avataaars/svg?seed=Admin"
+          });
+          
+          await API.post("/users", {
+            name: "PawMart Admin",
+            email: email.trim(),
+            photoURL: "https://api.dicebear.com/7.x/avataaars/svg?seed=Admin",
+            role: "admin"
+          });
+
+          toast.success("Admin account initialized! Welcome. 🛡️");
+          navigate("/");
+          return;
+        } catch (regError) {
+          console.error("Admin auto-reg error:", regError);
+        }
+      }
+
       let message = "Failed to login";
       
       switch (error?.code) {

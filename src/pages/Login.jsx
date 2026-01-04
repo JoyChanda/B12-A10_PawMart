@@ -8,6 +8,7 @@ import {
   updateProfile 
 } from "firebase/auth";
 import { auth, provider } from "../firebase.config";
+import API from "../services/api";
 import toast from "react-hot-toast";
 import { Eye, EyeOff, Loader2, Mail, Lock, Sparkles, UserCheck, AlertCircle } from "lucide-react";
 
@@ -93,7 +94,15 @@ const Login = () => {
     setIsSubmitting(true);
 
     try {
-      await signInWithEmailAndPassword(auth, email.trim(), password);
+      const result = await signInWithEmailAndPassword(auth, email.trim(), password);
+      
+      // Sync with MongoDB
+      await API.post("/users", {
+        name: result.user.displayName,
+        email: result.user.email,
+        photoURL: result.user.photoURL
+      });
+
       toast.success("Welcome back! 🎉");
       navigate("/");
     } catch (error) {
@@ -126,7 +135,15 @@ const Login = () => {
     setIsSubmitting(true);
 
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      
+      // Sync with MongoDB
+      await API.post("/users", {
+        name: result.user.displayName,
+        email: result.user.email,
+        photoURL: result.user.photoURL
+      });
+
       toast.success("Successfully signed in with Google!");
       navigate("/");
     } catch (error) {

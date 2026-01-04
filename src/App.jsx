@@ -18,6 +18,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Help from "./pages/Help";
 import NotFound404 from "./pages/NotFound404";
+import ManageUsers from "./pages/ManageUsers";
 import PrivateRoute from "./components/PrivateRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import useAuth from "./hooks/useAuth";
@@ -86,6 +87,7 @@ function AppContent() {
             }
           >
             <Route index element={<DashboardHome />} />
+            <Route path="manage-users" element={<ManageUsers />} />
             <Route path="add-listing" element={<AddListing />} />
             <Route path="my-listings" element={<MyListings />} />
             <Route path="my-orders" element={<MyOrders />} />
@@ -107,4 +109,3 @@ function App() {
 }
 
 export default App;
-

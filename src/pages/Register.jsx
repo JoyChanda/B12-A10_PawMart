@@ -6,6 +6,7 @@ import {
 } from "firebase/auth";
 import { auth, provider } from "../firebase.config";
 import { useNavigate, Link } from "react-router-dom";
+import API from "../services/api";
 import toast from "react-hot-toast";
 import { motion as Motion } from "framer-motion";
 import { Eye, EyeOff, User, Mail, Lock, Camera, Loader2, Sparkles, AlertCircle, CheckCircle2 } from "lucide-react";
@@ -125,6 +126,15 @@ export default function Register() {
         displayName: trimmedName,
         photoURL: trimmedPhoto,
       });
+
+      // Save user to MongoDB
+      await API.post("/users", {
+        name: trimmedName,
+        email: trimmedEmail,
+        photoURL: trimmedPhoto,
+        role: "user" // Default role
+      });
+
       toast.success("Account created successfully! 🎉");
       nav("/");
     } catch (err) {
@@ -160,7 +170,16 @@ export default function Register() {
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      
+      // Save/Sync user to MongoDB
+      await API.post("/users", {
+        name: result.user.displayName,
+        email: result.user.email,
+        photoURL: result.user.photoURL,
+        role: "user"
+      });
+
       toast.success("Successfully signed in with Google!");
       nav("/");
     } catch (err) {

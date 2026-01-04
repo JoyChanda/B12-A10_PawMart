@@ -22,7 +22,7 @@ import DarkModeToggle from "./DarkModeToggle";
 import { FaDog } from "react-icons/fa";
 
 export default function DashboardLayout() {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -44,6 +44,15 @@ export default function DashboardLayout() {
     { path: "/dashboard/my-orders", icon: ShoppingCart, label: "My Orders" },
     { path: "/dashboard/profile", icon: UserIcon, label: "Profile" },
   ];
+
+  // Admin only menu items
+  if (isAdmin) {
+    menuItems.splice(1, 0, { 
+      path: "/dashboard/manage-users", 
+      icon: UserIcon, 
+      label: "Manage Users" 
+    });
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">

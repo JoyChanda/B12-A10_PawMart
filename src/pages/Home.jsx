@@ -64,7 +64,7 @@ export default function Home() {
   return (
     <div className="bg-slate-100 dark:bg-slate-900 transition-colors duration-500 overflow-hidden">
       {/* Hero Section */}
-      <section className="relative h-[85vh] min-h-[750px] flex items-start pt-32 lg:pt-40 pb-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-950/20">
+      <section className="relative lg:h-[85vh] lg:min-h-[740px] flex items-start pt-32 lg:pt-40 pb-20 lg:pb-16 px-4 sm:px-6 lg:px-8 bg-white dark:bg-slate-950/20">
         <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center h-full relative z-10">
           <Motion.div 
             initial={{ opacity: 0, x: -30 }}
@@ -77,7 +77,7 @@ export default function Home() {
               <span>Pet Services Platform</span>
             </div>
             
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-display font-bold text-slate-950 dark:text-white leading-[1.1] tracking-tight">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-display font-bold text-slate-950 dark:text-white leading-[1.1] tracking-tight">
               Where Pets Find <span className="text-primary-500">Perfect</span> Homes.
             </h1>
             
@@ -190,7 +190,7 @@ export default function Home() {
         <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-slate-100 dark:from-slate-900 to-transparent z-0"></div>
       </section>
 
-      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-32 py-32 mt-12">
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20 lg:space-y-32 py-16 lg:py-32 mt-4 lg:mt-12">
         {/* Section 2: Categories Section */}
         <section id="categories" className="scroll-mt-32">
           <div className="text-center space-y-4 mb-16">
@@ -203,12 +203,12 @@ export default function Home() {
               <Sparkles size={14} />
               Quick Search
             </Motion.div>
-            <h2 className="text-4xl md:text-5xl font-display font-bold text-slate-950 dark:text-white">Browse Categories</h2>
+            <h2 className="text-3xl md:text-5xl font-display font-bold text-slate-950 dark:text-white">Browse Categories</h2>
             <p className="text-slate-700 dark:text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
               Find exactly what your pet needs with our curated categories.
             </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {categories.map((c) => (
               <CategoryCard key={c.name} category={c} />
             ))}

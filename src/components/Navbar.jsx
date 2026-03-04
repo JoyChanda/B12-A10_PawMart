@@ -130,7 +130,7 @@ const Navbar = ({ user, handleLogout }) => {
             exit={{ opacity: 0, y: -20 }}
             className="md:hidden absolute top-full left-0 right-0 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 shadow-2xl overflow-hidden"
           >
-            <div className="px-6 py-8 space-y-3">
+            <div className="px-4 sm:px-6 py-6 sm:py-8 space-y-3">
               {[...visibleNavLinks, ...(user ? authLinks : [])].map((link) => (
                 <NavLink
                   key={link.path + link.name}
